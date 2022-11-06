@@ -10,7 +10,7 @@ namespace BNG {
         public LoadSceneMode loadSceneMode = LoadSceneMode.Single;
 
         [Tooltip("If true, the ScreenFader component will fade the screen to black before loading a level.")]
-        public bool UseSceenFader = true;
+        public bool UseScreenFader = true;
 
         [Tooltip("Wait this long in seconds before attempting to load the scene. Useful if you need to fade the screen out before attempting to load the level.")]
         public float ScreenFadeTime = 0.5f;
@@ -23,7 +23,7 @@ namespace BNG {
 
             _loadSceneName = SceneName;
 
-            if (UseSceenFader) {
+            if (UseScreenFader) {
                 StartCoroutine("FadeThenLoadScene");
             }
             else {
@@ -33,7 +33,7 @@ namespace BNG {
 
         public IEnumerator FadeThenLoadScene() {
 
-            if (UseSceenFader) {
+            if (UseScreenFader) {
                 if (sf == null) {
                     sf = FindObjectOfType<ScreenFader>();
                     // May not have found anything
