@@ -76,7 +76,7 @@ public class PanelElement : MonoBehaviour
             SetBlockerActive(isBlockerActive);
         
         if (parentPanel)
-            parentPanel.MoveBack();
+            parentPanel.MoveBack(duration);
         
         SetCanvasLayer(1);
         _rectTransform.DOMoveX(_rectTransform.anchoredPosition.x - _moveFactor - spacing, duration)
@@ -98,7 +98,7 @@ public class PanelElement : MonoBehaviour
             SetBlockerActive(isBlockerActive);
         
         if (parentPanel)
-            parentPanel.MoveForward();
+            parentPanel.MoveForward(duration);
         
         SetCanvasLayer(1);
         _rectTransform.DOMoveX(_rectTransform.anchoredPosition.x + _moveFactor + spacing, duration)
@@ -111,22 +111,28 @@ public class PanelElement : MonoBehaviour
             });
     }
 
-    private void MoveBack()
+    private void MoveBack(float duration)
     {
         if (_inProgress)
             return;
         
-        _rectTransform.DOMoveZ(_rectTransform.anchoredPosition3D.z + 0.05f, 0.1f)
+        if (parentPanel)
+            parentPanel.MoveBack(duration);
+        
+        _rectTransform.DOMoveZ(_rectTransform.anchoredPosition3D.z + 0.05f, duration)
             .OnStart(() => _inProgress = true)
             .OnComplete(() => _inProgress = false);
     }
     
-    private void MoveForward()
+    private void MoveForward(float duration)
     {
         if (_inProgress)
             return;
         
-        _rectTransform.DOMoveZ(_rectTransform.anchoredPosition3D.z - 0.05f, 0.1f)
+        if (parentPanel)
+            parentPanel.MoveForward(duration);
+        
+        _rectTransform.DOMoveZ(_rectTransform.anchoredPosition3D.z - 0.05f, duration)
             .OnStart(() => _inProgress = true)
             .OnComplete(() => _inProgress = false);
     }

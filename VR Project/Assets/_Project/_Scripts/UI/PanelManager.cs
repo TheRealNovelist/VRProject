@@ -10,8 +10,7 @@ public class PanelManager : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private bool expandOnStart = true;
     
-    [SerializeField] private float expandTime = 1f;
-    [SerializeField] private float moveTime = 1f;
+    [SerializeField] private float duration = 1f;
 
     [SerializeField] private float spacing = 0.3f;
 
@@ -25,18 +24,18 @@ public class PanelManager : MonoBehaviour
         
         if (!expandOnStart) return;
         
-        currentPanel.Expand(expandTime);
+        currentPanel.Expand(duration);
     }
 
     public void ToPanel(PanelElement nextPanel)
     {
-        currentPanel.MoveLeft(moveTime, spacing, true);
+        currentPanel.MoveLeft(duration, spacing, true);
         
         //Setting the parent panel as the current panel first
         nextPanel.parentPanel = currentPanel;
         currentPanel = nextPanel;
         
-        currentPanel.Expand(expandTime);
+        currentPanel.Expand(duration);
     }
 
     public void ReturnPanel()
@@ -44,7 +43,7 @@ public class PanelManager : MonoBehaviour
         if (!currentPanel.parentPanel)
             return;
         
-        currentPanel.Minimize(expandTime);
+        currentPanel.Minimize(duration);
         
         //Store returning panel from parent panel
         PanelElement returningPanel = currentPanel.parentPanel;
@@ -53,6 +52,6 @@ public class PanelManager : MonoBehaviour
         currentPanel.parentPanel = null;
         currentPanel = returningPanel;
         
-        currentPanel.MoveRight(moveTime, spacing, false, true);
+        currentPanel.MoveRight(duration, spacing, false, true);
     }
 }
