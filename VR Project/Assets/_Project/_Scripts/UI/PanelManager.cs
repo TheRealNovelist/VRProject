@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class PanelManager : MonoBehaviour
 {
     [SerializeField] private PanelElement currentPanel;
@@ -13,7 +14,7 @@ public class PanelManager : MonoBehaviour
     [SerializeField] private float duration = 1f;
 
     [SerializeField] private float spacing = 0.3f;
-
+    
 
     private void Start()
     {
@@ -29,7 +30,7 @@ public class PanelManager : MonoBehaviour
 
     public void ToPanel(PanelElement nextPanel)
     {
-        currentPanel.MoveLeft(duration, spacing, true);
+        currentPanel.MoveLeft(duration, spacing);
         
         //Setting the parent panel as the current panel first
         nextPanel.parentPanel = currentPanel;
@@ -52,6 +53,6 @@ public class PanelManager : MonoBehaviour
         currentPanel.parentPanel = null;
         currentPanel = returningPanel;
         
-        currentPanel.MoveRight(duration, spacing, false, true);
+        currentPanel.MoveRight(duration, spacing);
     }
 }
