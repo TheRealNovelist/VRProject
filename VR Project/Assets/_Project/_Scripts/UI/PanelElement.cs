@@ -30,10 +30,13 @@ public class PanelElement : MonoBehaviour
         _moveFactor = _rectTransform.rect.width * _activeScale.x;
     }
 
-    public void Expand(float duration)
+    public void Expand(float duration, bool withParent)
     {
         if (_inProgress)
             return;
+
+        if (parentPanel && withParent)
+            parentPanel.Expand(duration, true);
         
         blocker.gameObject.SetActive(true);
         blocker.Fade(0f, 0f, duration).OnComplete(() => blocker.gameObject.SetActive(false));
@@ -41,6 +44,7 @@ public class PanelElement : MonoBehaviour
         gameObject.SetActive(true);
         _rectTransform.localScale = Vector3.zero;
         _rectTransform.DOScale(_activeScale, duration)
+            .SetUpdate(true)
             .OnStart(() => _inProgress = true)
             .OnComplete(() =>
             {
@@ -48,17 +52,21 @@ public class PanelElement : MonoBehaviour
                 
             });
     }
-
-    public void Minimize(float duration)
+    
+    public void Minimize(float duration, bool withParent)
     {
         if (_inProgress)
             return;
+
+        if (parentPanel && withParent)
+            parentPanel.Minimize(duration, true);
         
         blocker.gameObject.SetActive(true);
         blocker.Fade(0f, 0f, duration);
         
         _rectTransform.localScale = _activeScale;
         _rectTransform.DOScale(Vector3.zero, duration)
+            .SetUpdate(true)
             .OnStart(() => _inProgress = true)
             .OnComplete(() =>
             {
@@ -66,7 +74,7 @@ public class PanelElement : MonoBehaviour
                 gameObject.SetActive(false);
             });
     }
-    
+
     public void MoveLeft(float duration, float spacing)
     {
         if (_inProgress)
@@ -80,6 +88,7 @@ public class PanelElement : MonoBehaviour
         
         SetCanvasLayer(1);
         _rectTransform.DOMoveX(_rectTransform.anchoredPosition.x - _moveFactor - spacing, duration)
+            .SetUpdate(true)
             .OnStart(() => _inProgress = true)
             .OnComplete(() =>
             {
@@ -100,6 +109,7 @@ public class PanelElement : MonoBehaviour
         
         SetCanvasLayer(1);
         _rectTransform.DOMoveX(_rectTransform.anchoredPosition.x + _moveFactor + spacing, duration)
+            .SetUpdate(true)
             .OnStart(() => _inProgress = true)
             .OnComplete(() =>
             {
@@ -117,6 +127,7 @@ public class PanelElement : MonoBehaviour
             parentPanel.MoveBack(duration);
         
         _rectTransform.DOMoveZ(_rectTransform.anchoredPosition3D.z + 0.05f, duration)
+            .SetUpdate(true)
             .OnStart(() => _inProgress = true)
             .OnComplete(() => _inProgress = false);
     }
@@ -130,6 +141,7 @@ public class PanelElement : MonoBehaviour
             parentPanel.MoveForward(duration);
         
         _rectTransform.DOMoveZ(_rectTransform.anchoredPosition3D.z - 0.05f, duration)
+            .SetUpdate(true)
             .OnStart(() => _inProgress = true)
             .OnComplete(() => _inProgress = false);
     }

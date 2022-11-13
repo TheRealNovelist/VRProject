@@ -24,10 +24,19 @@ public class PanelManager : MonoBehaviour
         }
         
         if (!expandOnStart) return;
-        
-        currentPanel.Expand(duration);
+        currentPanel.Expand(duration, true);
     }
 
+    public void ExpandAll()
+    {
+        currentPanel.Expand(duration, true);
+    }
+
+    public void MinimizeAll()
+    {
+        currentPanel.Minimize(duration, true);
+    }
+    
     public void ToPanel(PanelElement nextPanel)
     {
         currentPanel.MoveLeft(duration, spacing);
@@ -36,7 +45,7 @@ public class PanelManager : MonoBehaviour
         nextPanel.parentPanel = currentPanel;
         currentPanel = nextPanel;
         
-        currentPanel.Expand(duration);
+        currentPanel.Expand(duration, false);
     }
 
     public void ReturnPanel()
@@ -44,7 +53,7 @@ public class PanelManager : MonoBehaviour
         if (!currentPanel.parentPanel)
             return;
         
-        currentPanel.Minimize(duration);
+        currentPanel.Minimize(duration, false);
         
         //Store returning panel from parent panel
         PanelElement returningPanel = currentPanel.parentPanel;

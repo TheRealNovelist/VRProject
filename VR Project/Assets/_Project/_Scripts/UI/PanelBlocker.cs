@@ -12,7 +12,7 @@ public class PanelBlocker : MonoBehaviour
     public Tween Fade(float from, float to, float duration)
     {
         SetBlockerAlpha(from);
-        return _blocker.DOFade(to, duration);
+        return _blocker.DOFade(to, duration).SetUpdate(true);
     }
     
     public void SetBlockerAlpha(float alpha)
