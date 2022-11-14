@@ -29,6 +29,7 @@ namespace BNG {
         Image fadeImage;
         IEnumerator fadeRoutine;
         string faderName = "ScreenFader";
+        string sortingGroup = "Fader";
 
 
         void Awake() {
@@ -53,6 +54,7 @@ namespace BNG {
 
                 fadeCanvas = fadeObject.AddComponent<Canvas>();
                 fadeCanvas.renderMode = RenderMode.WorldSpace;
+                fadeCanvas.sortingLayerName = "Fader";
                 fadeCanvas.sortingOrder = 100; // Make sure the canvas renders on top
 
                 canvasGroup = fadeObject.AddComponent<CanvasGroup>();
