@@ -12,11 +12,9 @@ public class PauseManager : MonoBehaviour
     [SerializeField] private PanelManager pausePanel;
     [SerializeField] private InputActionReference InputAction = default;
     
-    private ScreenFader fader;
-
     private void Start()
     {
-        fader = FindObjectOfType<ScreenFader>();
+
     }
     
     private void OnEnable() {
@@ -37,7 +35,6 @@ public class PauseManager : MonoBehaviour
         if (!isPaused)
         {
             //Unpause the game
-            fader.SetFadeLevel(0f);
             pausePanel.MinimizeAll();
 
             IsGamePaused = false;
@@ -46,7 +43,6 @@ public class PauseManager : MonoBehaviour
         else
         {
             //Pause game
-            fader.SetFadeLevel(0.95f);
             pausePanel.ExpandAll();
 
             IsGamePaused = true;

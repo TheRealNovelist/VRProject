@@ -30,119 +30,46 @@ public class PanelElement : MonoBehaviour
         _moveFactor = _rectTransform.rect.width * _activeScale.x;
     }
 
-    public void Expand(float duration, bool withParent)
+    public Tween Expand(float duration)
     {
-        if (_inProgress)
-            return;
-
-        if (parentPanel && withParent)
-            parentPanel.Expand(duration, true);
-        
-        blocker.gameObject.SetActive(true);
-        blocker.Fade(0f, 0f, duration).OnComplete(() => blocker.gameObject.SetActive(false));
-        
-        gameObject.SetActive(true);
-        _rectTransform.localScale = Vector3.zero;
-        _rectTransform.DOScale(_activeScale, duration)
+        return _rectTransform.DOScale(_activeScale, duration)
             .SetUpdate(true)
-            .OnStart(() => _inProgress = true)
-            .OnComplete(() =>
+            .OnStart(() =>
             {
-                _inProgress = false;
-                
+                gameObject.SetActive(true);
+                _rectTransform.localScale = Vector3.zero;
             });
     }
     
-    public void Minimize(float duration, bool withParent)
+    public Tween Minimize(float duration)
     {
-        if (_inProgress)
-            return;
-
-        if (parentPanel && withParent)
-            parentPanel.Minimize(duration, true);
-        
-        blocker.gameObject.SetActive(true);
-        blocker.Fade(0f, 0f, duration);
-        
-        _rectTransform.localScale = _activeScale;
-        _rectTransform.DOScale(Vector3.zero, duration)
+        return _rectTransform.DOScale(Vector3.zero, duration)
             .SetUpdate(true)
-            .OnStart(() => _inProgress = true)
-            .OnComplete(() =>
+            .OnStart(() =>
             {
-                _inProgress = false;
-                gameObject.SetActive(false);
-            });
+                _rectTransform.localScale = _activeScale;
+            })
+            .OnComplete(() => gameObject.SetActive(false));
     }
 
-    public void MoveLeft(float duration, float spacing)
+    public Tween MoveX(float duration, float direction, float spacing)
     {
-        if (_inProgress)
-            return;
-
-        if (parentPanel)
-            parentPanel.MoveBack(duration);
-        
-        blocker.gameObject.SetActive(true);
-        blocker.Fade(0f, fadeAmount, duration);
-        
-        SetCanvasLayer(1);
-        _rectTransform.DOMoveX(_rectTransform.anchoredPosition.x - _moveFactor - spacing, duration)
+        return _rectTransform.DOLocalMoveX(_rectTransform.localPosition.x + direction * (_moveFactor + spacing), duration)
             .SetUpdate(true)
-            .OnStart(() => _inProgress = true)
+            .OnStart(() =>
+            {
+                SetCanvasLayer(1);
+            })
             .OnComplete(() =>
             {
-                _inProgress = false;
                 SetCanvasLayer(0);
             });
-    }
-
-    public void MoveRight(float duration, float spacing)
-    {
-        if (_inProgress)
-            return;
-
-        if (parentPanel)
-            parentPanel.MoveForward(duration);
-        
-        blocker.Fade(fadeAmount, 0f, duration).OnComplete(() => blocker.gameObject.SetActive(false));
-        
-        SetCanvasLayer(1);
-        _rectTransform.DOMoveX(_rectTransform.anchoredPosition.x + _moveFactor + spacing, duration)
-            .SetUpdate(true)
-            .OnStart(() => _inProgress = true)
-            .OnComplete(() =>
-            {
-                _inProgress = false;
-                SetCanvasLayer(0);
-            });
-    }
-
-    private void MoveBack(float duration)
-    {
-        if (_inProgress)
-            return;
-        
-        if (parentPanel)
-            parentPanel.MoveBack(duration);
-        
-        _rectTransform.DOMoveZ(_rectTransform.anchoredPosition3D.z + 0.05f, duration)
-            .SetUpdate(true)
-            .OnStart(() => _inProgress = true)
-            .OnComplete(() => _inProgress = false);
     }
     
-    private void MoveForward(float duration)
+
+    private Tween MoveZ(float duration, float direction, float spacing)
     {
-        if (_inProgress)
-            return;
-        
-        if (parentPanel)
-            parentPanel.MoveForward(duration);
-        
-        _rectTransform.DOMoveZ(_rectTransform.anchoredPosition3D.z - 0.05f, duration)
-            .SetUpdate(true)
-            .OnStart(() => _inProgress = true)
-            .OnComplete(() => _inProgress = false);
+        return _rectTransform.DOLocalMoveZ(_rectTransform.localPosition.z + direction * spacing, duration).SetUpdate(true);
     }
+    
 }

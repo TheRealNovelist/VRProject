@@ -9,10 +9,16 @@ public class PanelBlocker : MonoBehaviour
 {
     private Image _blocker => GetComponent<Image>();
     
-    public Tween Fade(float from, float to, float duration)
+    public Tween SetBlockerAlpha(float from, float to, float duration, bool active = false)
     {
+        gameObject.SetActive(true);
         SetBlockerAlpha(from);
-        return _blocker.DOFade(to, duration).SetUpdate(true);
+        return _blocker.DOFade(to, duration).SetUpdate(true)
+            .OnComplete(() =>
+            {
+                if (!active)
+                    gameObject.SetActive(false);
+            });
     }
     
     public void SetBlockerAlpha(float alpha)

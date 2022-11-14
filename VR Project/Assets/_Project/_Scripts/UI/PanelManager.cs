@@ -24,44 +24,26 @@ public class PanelManager : MonoBehaviour
         }
         
         if (!expandOnStart) return;
-        currentPanel.Expand(duration, true);
+
     }
 
     public void ExpandAll()
     {
-        currentPanel.Expand(duration, true);
+
     }
 
     public void MinimizeAll()
     {
-        currentPanel.Minimize(duration, true);
+        
     }
     
     public void ToPanel(PanelElement nextPanel)
     {
-        currentPanel.MoveLeft(duration, spacing);
-        
-        //Setting the parent panel as the current panel first
-        nextPanel.parentPanel = currentPanel;
-        currentPanel = nextPanel;
-        
-        currentPanel.Expand(duration, false);
+
     }
 
     public void ReturnPanel()
     {
-        if (!currentPanel.parentPanel)
-            return;
-        
-        currentPanel.Minimize(duration, false);
-        
-        //Store returning panel from parent panel
-        PanelElement returningPanel = currentPanel.parentPanel;
-        
-        //Set parent panel as null before switching
-        currentPanel.parentPanel = null;
-        currentPanel = returningPanel;
-        
-        currentPanel.MoveRight(duration, spacing);
+
     }
 }
