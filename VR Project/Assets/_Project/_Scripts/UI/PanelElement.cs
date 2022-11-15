@@ -6,17 +6,12 @@ using DG.Tweening;
 using UnityEngine.UI;
 public class PanelElement : MonoBehaviour
 {
-    [SerializeField] private PanelBlocker blocker;
+    public PanelBlocker blocker;
 
-    [HideInInspector] public PanelElement parentPanel;
-
-    [Range(0f, 1f)][SerializeField] private float fadeAmount = 0.75f;
     private RectTransform _rectTransform;
-    private Vector3 _activeScale;
-
-    private float _moveFactor;
-
-    private bool _inProgress;
+    
+    private Vector3 _canvasScale;
+    private float _canvasWidth;
 
     private void SetCanvasLayer(int order)
     {
@@ -26,35 +21,30 @@ public class PanelElement : MonoBehaviour
     private void Awake()
     {
         _rectTransform = GetComponent<RectTransform>();
-        _activeScale = _rectTransform.localScale;
-        _moveFactor = _rectTransform.rect.width * _activeScale.x;
+        _canvasScale = _rectTransform.localScale;
+        _canvasWidth = _rectTransform.rect.width * _canvasScale.x;
     }
 
     public Tween Expand(float duration)
     {
-        return _rectTransform.DOScale(_activeScale, duration)
-            .SetUpdate(true)
-            .OnStart(() =>
-            {
-                gameObject.SetActive(true);
-                _rectTransform.localScale = Vector3.zero;
-            });
+        blocker.SetBlockerAlpha(0, 0, duration);
+        gameObject.SetActive(true);
+        _rectTransform.localScale = Vector3.zero;
+        return _rectTransform.DOScale(_canvasScale, duration).SetUpdate(true);
     }
     
     public Tween Minimize(float duration)
     {
+        blocker.SetBlockerAlpha(0, 0, duration);
+        _rectTransform.localScale = _canvasScale;
         return _rectTransform.DOScale(Vector3.zero, duration)
             .SetUpdate(true)
-            .OnStart(() =>
-            {
-                _rectTransform.localScale = _activeScale;
-            })
             .OnComplete(() => gameObject.SetActive(false));
     }
 
     public Tween MoveX(float duration, float direction, float spacing)
     {
-        return _rectTransform.DOLocalMoveX(_rectTransform.localPosition.x + direction * (_moveFactor + spacing), duration)
+        return _rectTransform.DOLocalMoveX(_rectTransform.localPosition.x + direction * (_canvasWidth + spacing), duration)
             .SetUpdate(true)
             .OnStart(() =>
             {
@@ -67,9 +57,13 @@ public class PanelElement : MonoBehaviour
     }
     
 
-    private Tween MoveZ(float duration, float direction, float spacing)
+    public Tween MoveZ(float duration, float direction, float spacing)
     {
         return _rectTransform.DOLocalMoveZ(_rectTransform.localPosition.z + direction * spacing, duration).SetUpdate(true);
     }
     
+    public void ResetPanel()
+    {
+        _rectTransform.localPosition = new Vector3(0, 0, 0);
+    }
 }
