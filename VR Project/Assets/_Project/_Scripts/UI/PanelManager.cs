@@ -21,7 +21,7 @@ public class PanelManager : MonoBehaviour
     [SerializeField] private float xSpacing = 0.3f;
     [SerializeField] private float zSpacing = 0.05f;
     
-    private List<PanelElement> activePanels;
+    private readonly List<PanelElement> _activePanels = new List<PanelElement>();
     private void Start()
     {
         foreach (Transform childPanel in transform)
@@ -43,68 +43,68 @@ public class PanelManager : MonoBehaviour
     
     public void MinimizeAll()
     {
-        foreach (PanelElement panel in activePanels)
+        foreach (PanelElement panel in _activePanels)
         {
             panel.Minimize(transitionDuration).OnComplete(() => panel.ResetPanel());
         }
         
-        activePanels.Clear();
+        _activePanels.Clear();
     }
     
     public void ToPanel(PanelElement nextPanel)
     {
-        for (int i = 0; i < activePanels.Count; i++)
+        for (int i = 0; i < _activePanels.Count; i++)
         {
-            if (i == activePanels.Count - 1)
+            if (i == _activePanels.Count - 1)
             {
-                activePanels[i].MoveX(transitionDuration, moveRight ? 1 : -1, xSpacing);
-                activePanels[i].blocker.SetBlockerAlpha(0, fadeAmount, transitionDuration, true);
+                _activePanels[i].MoveX(transitionDuration, moveRight ? 1 : -1, xSpacing);
+                _activePanels[i].blocker.SetBlockerAlpha(0, fadeAmount, transitionDuration, true);
                 continue;
             }
 
             if (panelStacking)
             {
-                activePanels[i].MoveZ(transitionDuration, 1, zSpacing);
+                _activePanels[i].MoveZ(transitionDuration, 1, zSpacing);
             }
             else
             {
-                activePanels[i].MoveX(transitionDuration, moveRight ? 1 : -1, xSpacing);
+                _activePanels[i].MoveX(transitionDuration, moveRight ? 1 : -1, xSpacing);
             }
         }
         
-        activePanels.Add(nextPanel);
+        _activePanels.Add(nextPanel);
         nextPanel.Expand(transitionDuration);
     }
 
     public void PreviousPanel()
     {
         //Avoid the only panel to be removed
-        if (activePanels.Count == 1)
+        if (_activePanels.Count == 1)
         {
             return;
         }
         
-        PanelElement currentPanel = activePanels[^1];
-        activePanels.Remove(currentPanel);
+        PanelElement currentPanel = _activePanels[^1];
+        _activePanels.Remove(currentPanel);
         
         currentPanel.Minimize(transitionDuration);
         
-        for (int i = 0; i < activePanels.Count; i++)
+        for (int i = 0; i < _activePanels.Count; i++)
         {
-            if (i == activePanels.Count - 1)
+            if (i == _activePanels.Count - 1)
             {
-                activePanels[i].MoveX(transitionDuration, moveRight ? -1 : 1, xSpacing);
-                activePanels[i].blocker.SetBlockerAlpha(fadeAmount, 0, transitionDuration);
+                _activePanels[i].MoveX(transitionDuration, moveRight ? -1 : 1, xSpacing);
+                _activePanels[i].blocker.SetBlockerAlpha(fadeAmount, 0, transitionDuration);
                 continue;
             }
 
             if (panelStacking)
             {
-                activePanels[i].MoveZ(transitionDuration, -1, zSpacing);
+                _activePanels[i].MoveZ(transitionDuration, -1, zSpacing);
             }
             else
             {
-                activePanels[i].MoveX(transitionDuration, moveRight ? -1 : 1, xSpacing);
+                _activePanels[i].MoveX(transitionDuration, moveRight ? -1 : 1, xSpacing);
             }
         }
     }

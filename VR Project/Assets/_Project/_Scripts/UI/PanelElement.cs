@@ -27,8 +27,8 @@ public class PanelElement : MonoBehaviour
 
     public Tween Expand(float duration)
     {
-        blocker.SetBlockerAlpha(0, 0, duration);
         gameObject.SetActive(true);
+        blocker.SetBlockerAlpha(0, 0, duration);
         _rectTransform.localScale = Vector3.zero;
         return _rectTransform.DOScale(_canvasScale, duration).SetUpdate(true);
     }
