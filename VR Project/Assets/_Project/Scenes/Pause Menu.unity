@@ -508,7 +508,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1763926365}
         m_TargetAssemblyTypeName: PanelManager, Assembly-CSharp
-        m_MethodName: ReturnPanel
+        m_MethodName: PreviousPanel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2017,8 +2017,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blocker: {fileID: 1258651124}
-  parentPanel: {fileID: 0}
-  fadeAmount: 0.75
 --- !u!224 &670624097
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2027,8 +2025,8 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 670624095}
   m_LocalRotation: {x: 0.110677056, y: -0, z: -0, w: 0.99385643}
-  m_LocalPosition: {x: 0, y: 0, z: 1.5}
-  m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.0005, y: 0.0005, z: 0.0005}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 219985472}
@@ -2038,7 +2036,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 12.709, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1500, y: 1500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &670624098
@@ -3587,8 +3585,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blocker: {fileID: 466382396}
-  parentPanel: {fileID: 0}
-  fadeAmount: 0.75
 --- !u!224 &1309448261
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3597,8 +3593,8 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1309448259}
   m_LocalRotation: {x: 0.110677056, y: -0, z: -0, w: 0.99385643}
-  m_LocalPosition: {x: 0, y: 0, z: 1.5}
-  m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.0005, y: 0.0005, z: 0.0005}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1447148684}
@@ -3608,7 +3604,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 12.709, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1500, y: 1500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1309448262
@@ -4622,10 +4618,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 648ee42f6ca695f4586d90698453dbbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentPanel: {fileID: 670624096}
+  initialPanel: {fileID: 670624096}
   expandOnStart: 0
-  duration: 0.5
-  spacing: 0.1
+  moveRight: 0
+  panelStacking: 1
+  transitionDuration: 0.5
+  fadeAmount: 0.7
+  xSpacing: 0.3
+  zSpacing: 0.05
 --- !u!4 &1763926366
 Transform:
   m_ObjectHideFlags: 0
@@ -4634,7 +4634,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1763926362}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 1.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4650,14 +4650,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1763926362}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 943d174babc32b249a27918baa15e648, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   FollowTransform: {fileID: 3781147161446976146}
   Character: {fileID: 3781147161444098932}
-  Offset: {x: 0, y: 0.44, z: 0.16}
+  Offset: {x: 0, y: 0, z: 0}
   RotateSpeed: 5
   MovementSmoothing: 0
   ParentToCharacter: 0

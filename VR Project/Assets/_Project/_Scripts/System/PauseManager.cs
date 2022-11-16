@@ -43,10 +43,10 @@ public class PauseManager : MonoBehaviour
         else
         {
             //Pause game
-            pausePanel.ExpandAll();
+            pausePanel.TurnOnPanel();
 
             IsGamePaused = true;
-            Time.timeScale = 0f;
+            //Time.timeScale = 0f;
         }
     }
 }
