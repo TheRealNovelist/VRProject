@@ -29,7 +29,6 @@ namespace BNG {
         Image fadeImage;
         IEnumerator fadeRoutine;
         string faderName = "ScreenFader";
-        string sortingGroup = "Fader";
 
 
         void Awake() {
