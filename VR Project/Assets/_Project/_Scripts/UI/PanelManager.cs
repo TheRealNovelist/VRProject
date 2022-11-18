@@ -7,6 +7,7 @@ using UnityEngine;
 public class PanelManager : MonoBehaviour
 {
     [SerializeField] private PanelElement initialPanel;
+    [SerializeField] private GameObject panelHolder;
     
     [Header("Settings")]
     [SerializeField] private bool expandOnStart = true;
@@ -24,7 +25,7 @@ public class PanelManager : MonoBehaviour
     private readonly List<PanelElement> _activePanels = new List<PanelElement>();
     private void Start()
     {
-        foreach (Transform childPanel in transform)
+        foreach (Transform childPanel in panelHolder.transform)
         {
             childPanel.gameObject.SetActive(false);
         }
