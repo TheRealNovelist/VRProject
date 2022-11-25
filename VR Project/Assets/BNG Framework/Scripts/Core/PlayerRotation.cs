@@ -10,7 +10,7 @@ namespace BNG {
         Snap,
         Smooth
     }
-    public class PlayerRotation : MonoBehaviour {
+    public class PlayerRotation : MonoBehaviour, IInputHelper {
 
         [Header("Input")]
         [Tooltip("Set to false to skip Update")]
@@ -166,6 +166,11 @@ namespace BNG {
 
             // Apply rotation
             transform.rotation = Quaternion.Euler(new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + rotationAmount, transform.eulerAngles.z));
+        }
+
+        public void SetInput(bool isActive)
+        {
+            AllowInput = isActive;
         }
     }
 }

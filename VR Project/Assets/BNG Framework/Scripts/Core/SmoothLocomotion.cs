@@ -11,7 +11,7 @@ namespace BNG {
         Controller
     }    
 
-    public class SmoothLocomotion : MonoBehaviour {
+    public class SmoothLocomotion : MonoBehaviour, IInputHelper{
 
         public PlayerControllerType ControllerType = PlayerControllerType.CharacterController;
 
@@ -599,6 +599,11 @@ namespace BNG {
                     Debug.DrawLine(contact.point, transform.position);
                 }
             }
+        }
+
+        public void SetInput(bool isActive)
+        {
+            AllowInput = isActive;
         }
     }
 

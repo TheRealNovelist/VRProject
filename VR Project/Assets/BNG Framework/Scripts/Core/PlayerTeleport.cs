@@ -19,10 +19,12 @@ namespace BNG {
     /// <summary>
     /// A basic Teleport script that uses a parabolic arc to determine teleport location
     /// </summary>
-    public class PlayerTeleport : MonoBehaviour {
-
+    public class PlayerTeleport : MonoBehaviour, IInputHelper
+    {
+        [Header("Input: ")] 
+        public bool AllowInput = true;
+        
         [Header("Colors")]
-
         [Tooltip("The LineRenderer to use when showing a teleport preview")]
         public LineRenderer TeleportLine;
 
@@ -203,8 +205,11 @@ namespace BNG {
             setVariables = true;
         }
 
-        void LateUpdate() {
-
+        void LateUpdate()
+        {
+            if (!AllowInput)
+                return;
+            
             // Are we pressing button to check for teleport?
             aimingTeleport = KeyDownForTeleport();            
 
@@ -716,6 +721,11 @@ namespace BNG {
                 Gizmos.color = gizColor;
                 Gizmos.DrawSphere(TeleportDestination.position, controller.radius);
             }
+        }
+
+        public void SetInput(bool isActive)
+        {
+            AllowInput = isActive;
         }
     }
 }
