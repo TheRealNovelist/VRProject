@@ -11,6 +11,12 @@ public class AmmoDisplaySlider : MonoBehaviour
     public RaycastWeapon weapon;
     public Slider slider;
 
+    public void Awake()
+    {
+        if (!weapon)
+            weapon = GetComponentInParent<RaycastWeapon>();
+    }
+    
     private void Start()
     {
         OnAmmoUpdate();

@@ -5,7 +5,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PanelBlocker : MonoBehaviour
+public class Blocker : MonoBehaviour
 {
     private Image _blocker => GetComponent<Image>();
     

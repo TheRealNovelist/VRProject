@@ -6,24 +6,26 @@ using UnityEngine;
 
 public class PanelManager : MonoBehaviour
 {
-    [SerializeField] private PanelElement initialPanel;
-    [SerializeField] private GameObject panelHolder;
+    [SerializeField] protected CustomUIElement initialPanel;
+    [SerializeField] protected GameObject panelHolder;
+    
+    [SerializeField] protected float transitionDuration = 0.5f;
+    
+    [Range(0, 1f)]
+    [SerializeField] protected float fadeAmount = 0.7f;
+    
+    [Space]
+    [SerializeField] protected float xSpacing = 0.3f;
+    [SerializeField] protected float zSpacing = 0.05f;
     
     [Header("Settings")]
     [SerializeField] private bool expandOnStart = true;
     [SerializeField] private bool moveRight = false;
     [SerializeField] private bool panelStacking = true;
-    [SerializeField] private float transitionDuration = 0.5f;
-    
-    [Range(0, 1f)]
-    [SerializeField] private float fadeAmount = 0.7f;
-    
-    [Space]
-    [SerializeField] private float xSpacing = 0.3f;
-    [SerializeField] private float zSpacing = 0.05f;
-    
-    private readonly List<PanelElement> _activePanels = new List<PanelElement>();
-    private void Start()
+
+    private readonly List<CustomUIElement> _activePanels = new List<CustomUIElement>();
+
+    private void Awake()
     {
         foreach (Transform childPanel in panelHolder.transform)
         {
@@ -31,8 +33,11 @@ public class PanelManager : MonoBehaviour
         }
 
         if (!initialPanel)
-            initialPanel = transform.GetChild(0).GetComponent<PanelElement>();
-        
+            initialPanel = panelHolder.transform.GetChild(0).GetComponent<CustomUIElement>();
+    }
+
+    private void Start()
+    {
         if (!expandOnStart) return;
         ToPanel(initialPanel);
     }
@@ -44,32 +49,34 @@ public class PanelManager : MonoBehaviour
     
     public void MinimizeAll()
     {
-        foreach (PanelElement panel in _activePanels)
+        foreach (CustomUIElement panel in _activePanels)
         {
-            panel.Minimize(transitionDuration).OnComplete(() => panel.ResetPanel());
+            panel.Minimize(transitionDuration).OnComplete(() => panel.ResetPosition());
         }
         
         _activePanels.Clear();
     }
     
-    public void ToPanel(PanelElement nextPanel)
+    public void ToPanel(CustomUIElement nextPanel)
     {
         for (int i = 0; i < _activePanels.Count; i++)
         {
+            CustomUIElement panel = _activePanels[i];
             if (i == _activePanels.Count - 1)
             {
-                _activePanels[i].MoveX(transitionDuration, moveRight ? 1 : -1, xSpacing);
-                _activePanels[i].blocker.SetBlockerAlpha(0, fadeAmount, transitionDuration, true);
+                panel.MoveX(transitionDuration, moveRight ? 1 : -1, xSpacing);
+                panel.SetCanvasLayer(1, 0, transitionDuration);
+                panel.blocker.SetBlockerAlpha(0, fadeAmount, transitionDuration, true);
                 continue;
             }
 
             if (panelStacking)
             {
-                _activePanels[i].MoveZ(transitionDuration, 1, zSpacing);
+                panel.MoveZ(transitionDuration, 1, zSpacing);
             }
             else
             {
-                _activePanels[i].MoveX(transitionDuration, moveRight ? 1 : -1, xSpacing);
+                panel.MoveX(transitionDuration, moveRight ? 1 : -1, xSpacing);
             }
         }
         
@@ -85,27 +92,29 @@ public class PanelManager : MonoBehaviour
             return;
         }
         
-        PanelElement currentPanel = _activePanels[^1];
-        _activePanels.Remove(currentPanel);
+        CustomUIElement currentCustomUI = _activePanels[^1];
+        _activePanels.Remove(currentCustomUI);
         
-        currentPanel.Minimize(transitionDuration);
+        currentCustomUI.Minimize(transitionDuration);
         
         for (int i = 0; i < _activePanels.Count; i++)
         {
+            CustomUIElement panel = _activePanels[i];
             if (i == _activePanels.Count - 1)
             {
-                _activePanels[i].MoveX(transitionDuration, moveRight ? -1 : 1, xSpacing);
-                _activePanels[i].blocker.SetBlockerAlpha(fadeAmount, 0, transitionDuration);
+                panel.MoveX(transitionDuration, moveRight ? -1 : 1, xSpacing);
+                panel.SetCanvasLayer(1, 0, transitionDuration);
+                panel.blocker.SetBlockerAlpha(fadeAmount, 0, transitionDuration);
                 continue;
             }
 
             if (panelStacking)
             {
-                _activePanels[i].MoveZ(transitionDuration, -1, zSpacing);
+                panel.MoveZ(transitionDuration, -1, zSpacing);
             }
             else
             {
-                _activePanels[i].MoveX(transitionDuration, moveRight ? -1 : 1, xSpacing);
+                panel.MoveX(transitionDuration, moveRight ? -1 : 1, xSpacing);
             }
         }
     }
