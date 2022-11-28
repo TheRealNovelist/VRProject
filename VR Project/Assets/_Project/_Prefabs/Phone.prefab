@@ -675,7 +675,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4483852333131906044}
-  - component: {fileID: 2255433998792998892}
+  - component: {fileID: 6827874384659446426}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -704,7 +704,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -127, y: 225.78}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2255433998792998892
+--- !u!114 &6827874384659446426
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -713,15 +713,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 3005499333622929242}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57f2b73f546370a48ab3a65f2618d4cb, type: 3}
+  m_Script: {fileID: 11500000, guid: a8db5eb5347dde3408edfcf2da043c06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   initialPage: {fileID: 101714456742292222}
-  panelHolder: {fileID: 3005499333622929242}
+  panelHolder: {fileID: 753813081096844174}
   transitionDuration: 0.25
   spacing: {x: 0, y: 0, z: 0}
   allPages:
   - {fileID: 101714456742292222}
+  normalMask:
+    serializedVersion: 2
+    m_Bits: 32567
+  xRayMask:
+    serializedVersion: 2
+    m_Bits: 32768
+  ghostMask:
+    serializedVersion: 2
+    m_Bits: 81719
+  cameraOnPhone: {fileID: 1038234425}
 --- !u!1 &3559012251788569174
 GameObject:
   m_ObjectHideFlags: 0
