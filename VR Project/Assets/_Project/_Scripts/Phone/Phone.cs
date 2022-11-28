@@ -97,8 +97,6 @@ public class Phone : GrabbableEvents
     
     public override void OnGrab(Grabber grabber)
     {
-        base.OnGrab(grabber);
-
         _handSide = grabber.HandSide;
         
         SwitchOrientation(PhoneOrientation.Vertical);
@@ -108,8 +106,6 @@ public class Phone : GrabbableEvents
 
     public override void OnRelease()
     {
-        base.OnRelease();
-
         _currentOrientation = PhoneOrientation.None;
         _currentNav.EndNavigation();
         _currentNav = app;

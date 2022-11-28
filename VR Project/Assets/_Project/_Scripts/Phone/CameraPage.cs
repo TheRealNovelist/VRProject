@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -19,19 +20,27 @@ public class CameraPage : PageManager
         XRay,
         Ghost
     }
-    
+
+    private void Start()
+    {
+        SwitchMode(CameraMode.Normal);
+    }
+
     void SwitchMode(CameraMode mode)
     {
         switch (mode)
         {
             case CameraMode.Normal:
                 cameraOnPhone.cullingMask = normalMask;
+                _mode = CameraMode.Normal;
                 break;
             case CameraMode.XRay:
                 cameraOnPhone.cullingMask = xRayMask;
+                _mode = CameraMode.XRay;
                 break;
             case CameraMode.Ghost:
                 cameraOnPhone.cullingMask = ghostMask;
+                _mode = CameraMode.Ghost;
                 break;
         }
     }

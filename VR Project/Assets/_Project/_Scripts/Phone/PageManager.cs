@@ -9,60 +9,52 @@ public class PageManager : MonoBehaviour, IPhoneNavigation
 {
     [SerializeField] protected CustomUIElement initialPage;
     [SerializeField] protected GameObject panelHolder;
-    
     [SerializeField] protected float transitionDuration = 0.5f;
-
     [SerializeField] protected Vector3 spacing;
-
     [SerializeField] private List<CustomUIElement> allPages;
 
-    private int currentIndex;
-
-    private bool isRunning;
+    private int _currentIndex;
+    private bool _isRunning;
     
     private void Awake()
     {
         if (!initialPage)
             initialPage = panelHolder.transform.GetChild(0).GetComponent<CustomUIElement>();
-
-        initialPage.gameObject.SetActive(true);
-        
-        
     }
 
-    public void MovePage(int increment)
+    private void MovePage(int increment)
     {
-        if ((currentIndex == 0 && increment < 0) || (currentIndex == allPages.Count - 1 && increment > 0))
+        if ((_currentIndex == 0 && increment < 0) || (_currentIndex == allPages.Count - 1 && increment > 0))
             return;
 
-        if (isRunning)
+        if (_isRunning)
             return;
         
-        CustomUIElement currentPage = allPages[currentIndex];
-        CustomUIElement nextPage = allPages[currentIndex + increment];
+        CustomUIElement currentPage = allPages[_currentIndex];
+        CustomUIElement nextPage = allPages[_currentIndex + increment];
 
-        isRunning = true;
+        _isRunning = true;
         
         Sequence moveSequence = DOTween.Sequence();
 
         moveSequence
             .Insert(0, currentPage.MoveX(transitionDuration, increment, spacing.x))
             .Insert(0, nextPage.MoveX(transitionDuration, increment, spacing.x))
-            .OnComplete(() => isRunning = false);
+            .OnComplete(() => _isRunning = false);
 
         moveSequence.Play();
         
-        currentIndex += increment;
+        _currentIndex += increment;
     }
 
-    public void Navigate(float x, float y)
+    public virtual void Navigate(float x, float y)
     {
         MovePage(Mathf.RoundToInt(x));
     }
 
     public void StartNavigation()
     {
-        currentIndex = 0;
+        _currentIndex = 0;
         
         foreach (var page in allPages)
         {
@@ -73,14 +65,14 @@ public class PageManager : MonoBehaviour, IPhoneNavigation
         initialPage.MoveY(transitionDuration, 1, spacing.y);
     }
 
-    public void Confirm()
+    public virtual void Confirm()
     {
         
     }
 
     public Tween EndNavigation()
     {
-        CustomUIElement currentPage = allPages[currentIndex];
+        CustomUIElement currentPage = allPages[_currentIndex];
         return currentPage.MoveY(transitionDuration, -1, spacing.y).OnComplete(() => gameObject.SetActive(false));
     }
 }
