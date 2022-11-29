@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class PageManager : MonoBehaviour, IPhoneNavigation
 {
+    [Header("Settings")]
     [SerializeField] protected CustomUIElement initialPage;
     [SerializeField] protected GameObject panelHolder;
     [SerializeField] protected float transitionDuration = 0.5f;
@@ -38,8 +39,8 @@ public class PageManager : MonoBehaviour, IPhoneNavigation
         Sequence moveSequence = DOTween.Sequence();
 
         moveSequence
-            .Insert(0, currentPage.MoveX(transitionDuration, increment, spacing.x))
-            .Insert(0, nextPage.MoveX(transitionDuration, increment, spacing.x))
+            .Insert(0, currentPage.MoveX(transitionDuration, -increment, spacing.x))
+            .Insert(0, nextPage.MoveX(transitionDuration, -increment, spacing.x))
             .OnComplete(() => _isRunning = false);
 
         moveSequence.Play();
@@ -59,7 +60,7 @@ public class PageManager : MonoBehaviour, IPhoneNavigation
         foreach (var page in allPages)
         {
             page.ResetPosition();
-            page.Move(page != initialPage ? new Vector3(-1, 0, 0) : new Vector3(0, -1, 0), spacing);
+            page.Move(page != initialPage ? new Vector3(1, 0, 0) : new Vector3(0, -1, 0), spacing);
         }
         
         initialPage.MoveY(transitionDuration, 1, spacing.y);
