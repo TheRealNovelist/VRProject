@@ -23,50 +23,53 @@ public class Phone : GrabbableEvents
     [SerializeField] private List<MonoBehaviour> _componentsToDisable;
     
     private ControllerHand _handSide;
-    private IPhoneNavigation _currentNav;
     private PhoneOrientation _currentOrientation = PhoneOrientation.None;
     private bool _allowNavigation = false;
+    
+    private IPhoneNavigation _currentNav;
     private void Update()
     {
-        if (_allowNavigation)
+        if (!_allowNavigation) 
+            return;
+        
+        var xAxis = 0f;
+        var yAxis = 0f;
+        var isThumbStickDown = false;
+        var isReturnButtonDown = false;
+
+        switch (_handSide)
         {
-            float xAxis = 0f;
-            float yAxis = 0f;
-            bool isThumbStickDown = false;
-            bool isReturnButtonDown = false;
-
-            switch (_handSide)
-            {
-                case ControllerHand.Left:
-                    xAxis = InputBridge.Instance.GetInputAxisValue(InputAxis.LeftThumbStickAxis).x;
-                    yAxis = InputBridge.Instance.GetInputAxisValue(InputAxis.LeftThumbStickAxis).y;
-                    isThumbStickDown = InputBridge.Instance.GetControllerBindingValue(ControllerBinding.LeftThumbstickDown);
-                    isReturnButtonDown = InputBridge.Instance.GetControllerBindingValue(ControllerBinding.YButton);
-                    break;
-                case ControllerHand.Right:
-                    xAxis = InputBridge.Instance.GetInputAxisValue(InputAxis.RightThumbStickAxis).x;
-                    yAxis = InputBridge.Instance.GetInputAxisValue(InputAxis.RightThumbStickAxis).y;
-                    isThumbStickDown = InputBridge.Instance.GetControllerBindingValue(ControllerBinding.RightThumbstickDown);
-                    isReturnButtonDown = InputBridge.Instance.GetControllerBindingValue(ControllerBinding.BButton);
-                    break;
-                default:
-                    Debug.Log("Phone: Hand not valid!");
-                    break;
-            }
+            case ControllerHand.Left:
+                xAxis = InputBridge.Instance.GetInputAxisValue(InputAxis.LeftThumbStickAxis).x;
+                yAxis = InputBridge.Instance.GetInputAxisValue(InputAxis.LeftThumbStickAxis).y;
+                isThumbStickDown = InputBridge.Instance.GetControllerBindingValue(ControllerBinding.LeftThumbstickDown);
+                isReturnButtonDown = InputBridge.Instance.GetControllerBindingValue(ControllerBinding.YButton);
+                break;
+            case ControllerHand.Right:
+                xAxis = InputBridge.Instance.GetInputAxisValue(InputAxis.RightThumbStickAxis).x;
+                yAxis = InputBridge.Instance.GetInputAxisValue(InputAxis.RightThumbStickAxis).y;
+                isThumbStickDown = InputBridge.Instance.GetControllerBindingValue(ControllerBinding.RightThumbstickDown);
+                isReturnButtonDown = InputBridge.Instance.GetControllerBindingValue(ControllerBinding.BButton);
+                break;
+            case ControllerHand.None:
+            default:
+                Debug.Log("Phone: Hand not valid!");
+                break;
+        }
             
-            _currentNav?.Navigate(xAxis, yAxis);
+        _currentNav?.Navigate(xAxis, yAxis);
             
-            if (isThumbStickDown)
-                _currentNav?.Confirm();
+        if (isThumbStickDown)
+            _currentNav?.Confirm();
 
-            if (isReturnButtonDown)
-            {
-                Tween tween = _currentNav?.EndNavigation();
-                if (tween != null)
-                    tween.OnComplete(() => SetNav(app));
-                else
-                    SetNav(app);
-            }
+        if (isReturnButtonDown)
+        {
+            Tween tween = _currentNav?.EndNavigation();
+            SetNav(null);
+            if (tween != null)
+                tween.OnComplete(() => SetNav(app));
+            else
+                SetNav(app);
         }
     }
 
@@ -107,7 +110,7 @@ public class Phone : GrabbableEvents
     public override void OnRelease()
     {
         _currentOrientation = PhoneOrientation.None;
-        _currentNav.EndNavigation();
+        _currentNav?.EndNavigation();
         _currentNav = app;
     }
 
