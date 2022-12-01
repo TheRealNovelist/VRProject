@@ -12,23 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b272c827d1549034eadd61e9bc46e464, type: 3}
   m_Name: New Audio Table
   m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes: []
-  _mixerGroup: {fileID: 0}
-  _files:
-  - name: 
-    volume: 0
-    pitch: 0
-    clips:
-      list:
-      - item: {fileID: 0}
-        weight: 0
-      - item: {fileID: 0}
-        weight: 0
+  mixerGroup: {fileID: 0}
+  _files: []
