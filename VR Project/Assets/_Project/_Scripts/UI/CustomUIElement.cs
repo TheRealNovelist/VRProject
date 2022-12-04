@@ -6,7 +6,7 @@ using DG.Tweening;
 using UnityEngine.UI;
 public class CustomUIElement : MonoBehaviour
 {
-    [HideInInspector] public Blocker blocker;
+    public Blocker blocker;
 
     private RectTransform _rectTransform => GetComponent<RectTransform>();
     
@@ -22,8 +22,6 @@ public class CustomUIElement : MonoBehaviour
     
     private void Awake()
     {
-        blocker = GetComponentInChildren<Blocker>();
-        
         _elementScale = _rectTransform.localScale;
         _elementWidth = _rectTransform.rect.width * _elementScale.x;
         _elementHeight = _rectTransform.rect.height * _elementScale.y;
@@ -32,14 +30,14 @@ public class CustomUIElement : MonoBehaviour
     public Tween Expand(float duration)
     {
         gameObject.SetActive(true);
-        if(blocker) blocker.SetBlockerAlpha(0, 0, duration);
+        if (blocker) blocker.SetBlockerAlpha(0, 0, duration);
         _rectTransform.localScale = Vector3.zero;
         return _rectTransform.DOScale(_elementScale, duration).SetUpdate(true);
     }
     
     public Tween Minimize(float duration)
     {
-        if(blocker) blocker.SetBlockerAlpha(0, 0, duration);
+        if (blocker) blocker.SetBlockerAlpha(0, 0, duration);
         _rectTransform.localScale = _elementScale;
         return _rectTransform.DOScale(Vector3.zero, duration)
             .SetUpdate(true)

@@ -92,10 +92,10 @@ public class PanelManager : MonoBehaviour
             return;
         }
         
-        CustomUIElement currentCustomUI = _activePanels[^1];
-        _activePanels.Remove(currentCustomUI);
+        CustomUIElement currentPanel = _activePanels[^1];
+        _activePanels.Remove(currentPanel);
         
-        currentCustomUI.Minimize(transitionDuration);
+        currentPanel.Minimize(transitionDuration);
         
         for (int i = 0; i < _activePanels.Count; i++)
         {
