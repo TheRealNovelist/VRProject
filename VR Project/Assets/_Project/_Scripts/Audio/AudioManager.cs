@@ -30,7 +30,7 @@ public class AudioManager : MonoBehaviour
     }
     
     [TabGroup("Testing"), Button(ButtonStyle.CompactBox, Expanded = true)]
-    private void Play(string audioName)
+    public void Play(string audioName)
     {
         AudioFile file = audioTable.FindAudioByName(audioName);
         
@@ -50,7 +50,7 @@ public class AudioManager : MonoBehaviour
     }
 
     [TabGroup("Testing"), Button(ButtonStyle.CompactBox, Expanded = true)]
-    private void PlayOneShot(string audioName)
+    public void PlayOneShot(string audioName)
     {
         AudioFile file = audioTable.FindAudioByName(audioName);
         
@@ -67,21 +67,21 @@ public class AudioManager : MonoBehaviour
     }
     
     [TabGroup("Testing"), Button]
-    private void Unpause()
+    public void Unpause()
     {
         if (source.clip && !source.isPlaying)
             source.UnPause();
     }
     
     [TabGroup("Testing"), Button]
-    private void Pause()
+    public void Pause()
     {
         if (source.isPlaying)
             source.Pause();
     }
     
     [TabGroup("Testing"), Button]
-    private void Stop()
+    public void Stop()
     {
         source.Stop();
     }
