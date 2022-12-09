@@ -39,23 +39,11 @@ namespace BNG {
         /// Instantiate this if shotgun equipped
         /// </summary>
         public GameObject RifleClip;
-
-        /// <summary>
-        /// Amount of Pistol Clips currently available
-        /// </summary>
-        public int CurrentPistolClips = 5;
-
-        public int CurrentRifleClips = 5;
-
-        public int CurrentShotgunShells = 30;
+        
 
         // Update is called once per frame
         void Update() {
-            bool weaponEquipped = false;
-
-            if (grabberHasWeapon(LeftGrabber) || grabberHasWeapon(RightGrabber)) {
-                weaponEquipped = true;
-            }
+            bool weaponEquipped = grabberHasWeapon(LeftGrabber) || grabberHasWeapon(RightGrabber);
 
             // Only show if we have something equipped
             if(AmmoDispenserObject.activeSelf != weaponEquipped) {
@@ -84,35 +72,23 @@ namespace BNG {
             bool rightGrabberValid = RightGrabber != null && RightGrabber.HeldGrabbable != null;
 
             // Shotgun
-            if (leftGrabberValid && LeftGrabber.HeldGrabbable.transform.name.Contains("Shotgun") && CurrentShotgunShells > 0) {
-                CurrentShotgunShells--;
-                return ShotgunShell;
-            }
-            else if (rightGrabberValid && RightGrabber.HeldGrabbable.transform.name.Contains("Shotgun") && CurrentShotgunShells > 0) {
-                CurrentShotgunShells--;
+            if (leftGrabberValid && LeftGrabber.HeldGrabbable.transform.name.Contains("Shotgun") || 
+                rightGrabberValid && RightGrabber.HeldGrabbable.transform.name.Contains("Shotgun")) {
                 return ShotgunShell;
             }
 
             // Rifle
-            if (leftGrabberValid && LeftGrabber.HeldGrabbable.transform.name.Contains("Rifle") && CurrentRifleClips > 0) {
-                CurrentRifleClips--;
-                return RifleClip;
-            }
-            else if (rightGrabberValid && RightGrabber.HeldGrabbable.transform.name.Contains("Rifle") && CurrentRifleClips > 0) {
-                CurrentRifleClips--;
+            if (leftGrabberValid && LeftGrabber.HeldGrabbable.transform.name.Contains("Rifle") || 
+                rightGrabberValid && RightGrabber.HeldGrabbable.transform.name.Contains("Rifle")) {
                 return RifleClip;
             }
 
             // Pistol
-            if (leftGrabberValid && LeftGrabber.HeldGrabbable.transform.name.Contains("Pistol") && CurrentPistolClips > 0) {
-                CurrentPistolClips--;
+            if (leftGrabberValid && LeftGrabber.HeldGrabbable.transform.name.Contains("Pistol") || 
+                rightGrabberValid && RightGrabber.HeldGrabbable.transform.name.Contains("Pistol")) {
                 return PistolClip;
             }
-            else if (rightGrabberValid && RightGrabber.HeldGrabbable.transform.name.Contains("Pistol") && CurrentPistolClips > 0) {
-                CurrentPistolClips--;
-                return PistolClip;
-            }
-
+            
             // Default to nothing
             return null;
         }
@@ -141,17 +117,17 @@ namespace BNG {
             }
         }
 
-        public virtual void AddAmmo(string AmmoName) {
-            if(AmmoName.Contains("Shotgun")) {
-                CurrentShotgunShells++;
-            }
-            else if (AmmoName.Contains("Rifle")) {
-                CurrentRifleClips--;
-            }
-            else if (AmmoName.Contains("Pistol")) {
-                CurrentPistolClips++;
-            }
-        }
+        // public virtual void AddAmmo(string AmmoName) {
+        //     if(AmmoName.Contains("Shotgun")) {
+        //         CurrentShotgunShells++;
+        //     }
+        //     else if (AmmoName.Contains("Rifle")) {
+        //         CurrentRifleClips--;
+        //     }
+        //     else if (AmmoName.Contains("Pistol")) {
+        //         CurrentPistolClips++;
+        //     }
+        // }
     }
 }
 
