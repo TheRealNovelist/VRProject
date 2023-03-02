@@ -726,7 +726,7 @@ MonoBehaviour:
   displayText: {fileID: 5958354661613450691}
   normalMask:
     serializedVersion: 2
-    m_Bits: 32567
+    m_Bits: 16183
   xRayMask:
     serializedVersion: 2
     m_Bits: 32768
@@ -1202,7 +1202,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 114487
 --- !u!1 &4649863199959348840
 GameObject:
   m_ObjectHideFlags: 0

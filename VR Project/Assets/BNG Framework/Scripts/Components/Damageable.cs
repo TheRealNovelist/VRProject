@@ -12,9 +12,10 @@ namespace BNG {
     /// </summary>
     public class Damageable : MonoBehaviour {
 
+        public float maxHealth = 100;
+        
         public float Health = 100;
-        private float _startingHealth;
-
+        
         [Tooltip("If specified, this GameObject will be instantiated at this transform's position on death.")]
         public GameObject SpawnOnDeath;
 
@@ -83,7 +84,7 @@ namespace BNG {
         bool initialWasKinematic;
 
         private void Start() {
-            _startingHealth = Health;
+            Health = maxHealth;
             rigid = GetComponent<Rigidbody>();
             if (rigid) {
                 initialWasKinematic = rigid.isKinematic;
@@ -189,7 +190,7 @@ namespace BNG {
 
             yield return new WaitForSeconds(seconds);
 
-            Health = _startingHealth;
+            Health = maxHealth;
             destroyed = false;
 
             // Deactivate
