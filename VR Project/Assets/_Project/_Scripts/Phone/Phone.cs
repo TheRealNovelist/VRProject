@@ -5,25 +5,16 @@ using BNG;
 using DG.Tweening;
 using UnityEngine;
 
-public enum PhoneOrientation
-{
-    None,
-    Vertical,
-    Horizontal
-}
-
 [SelectionBase]
 public class Phone : GrabbableEvents
 {
     public GameObject verticalPhone;
-    public GameObject horizontalPhone;
     public AppManager app;
     
     [Space]
     [SerializeField] private List<MonoBehaviour> _componentsToDisable;
     
     private ControllerHand _handSide;
-    private PhoneOrientation _currentOrientation = PhoneOrientation.None;
     private bool _allowNavigation = false;
     
     private IPhoneNavigation _currentNav;
@@ -77,39 +68,18 @@ public class Phone : GrabbableEvents
     {
         _currentNav = newNav;
     }
-
-    public void SwitchOrientation(PhoneOrientation orientation)
-    {
-        if (orientation == _currentOrientation)
-            return;
-        
-        switch (orientation)
-        {
-            case PhoneOrientation.Vertical:
-                verticalPhone.SetActive(true);
-                horizontalPhone.SetActive(false);
-                _currentOrientation = PhoneOrientation.Vertical;
-                break;
-            case PhoneOrientation.Horizontal:
-                verticalPhone.SetActive(false);
-                horizontalPhone.SetActive(true);
-                _currentOrientation = PhoneOrientation.Horizontal;
-                break;
-        }
-    }
     
     public override void OnGrab(Grabber grabber)
     {
         _handSide = grabber.HandSide;
         
-        SwitchOrientation(PhoneOrientation.Vertical);
         SetNav(app);
+        verticalPhone.SetActive(true);
         app.Init(this);
     }
 
     public override void OnRelease()
     {
-        _currentOrientation = PhoneOrientation.None;
         _currentNav?.EndNavigation();
         _currentNav = app;
     }
