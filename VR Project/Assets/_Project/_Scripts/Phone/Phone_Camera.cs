@@ -5,6 +5,7 @@ using System.IO;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Phone_Camera : MonoBehaviour, IPhoneApp
 {
@@ -14,7 +15,8 @@ public class Phone_Camera : MonoBehaviour, IPhoneApp
 
     [Header("Image Settings")]
     [SerializeField] private RenderTexture cameraTexture;
-    [SerializeField] private string tempPath; 
+    [SerializeField] private string tempPath;
+    [SerializeField] private RawImage image;
     
     [Header("Camera Settings")]
     [SerializeField] private Camera cameraOnPhone;
@@ -95,5 +97,19 @@ public class Phone_Camera : MonoBehaviour, IPhoneApp
         byte[] bytes = texture2D.EncodeToPNG();
         
         File.WriteAllBytes(path, bytes);
+        
+        SetImage();
+    }
+
+    void SetImage()
+    {
+        Texture2D texture2D = new Texture2D(cameraTexture.width, cameraTexture.height);
+        string path = tempPath + "/" + "SampleImage.png";
+        byte[] bytes = File.ReadAllBytes(path);
+
+        texture2D.LoadImage(bytes);
+        texture2D.Apply();
+
+        image.texture = texture2D;
     }
 }
