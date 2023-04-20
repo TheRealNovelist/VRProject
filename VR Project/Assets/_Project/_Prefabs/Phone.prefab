@@ -721,6 +721,7 @@ MonoBehaviour:
   spacing: {x: 0, y: 0, z: 0}
   cameraTexture: {fileID: 8400000, guid: ee3401023630c9341bfc60e523993fbb, type: 2}
   tempPath: D:\Unity Project\VRProject\TempImages
+  album: {fileID: 11400000, guid: 27b88e7a0f9d2304dbba0d6fae3dca80, type: 2}
   image: {fileID: 3003535932470081850}
   cameraOnPhone: {fileID: 1038234425}
   displayText: {fileID: 5958354661613450691}

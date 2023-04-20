@@ -14,10 +14,8 @@ public class Phone_Camera : MonoBehaviour, IPhoneApp
     [SerializeField] private Vector3 spacing;
 
     [Header("Image Settings")]
-    [SerializeField] private RenderTexture cameraTexture;
-    [SerializeField] private string tempPath;
-    [SerializeField] private RawImage image;
-    
+    [SerializeField] private ImageAlbum album;
+
     [Header("Camera Settings")]
     [SerializeField] private Camera cameraOnPhone;
     [SerializeField] private TextMeshProUGUI displayText;
@@ -35,9 +33,15 @@ public class Phone_Camera : MonoBehaviour, IPhoneApp
         XRay = 1,
         Ghost = 2
     }
-    
+
+    private void Awake()
+    {
+        album.GetAllImageFromFolder();
+    }
+
     private void Start()
     {
+        
         SwitchMode(initialMode);
     }
 
@@ -77,7 +81,7 @@ public class Phone_Camera : MonoBehaviour, IPhoneApp
 
     public void OnThumbStickDown()
     {
-        GetImage();
+        album.CreateImage();
     }
 
     public Tween ExitApp()
@@ -85,31 +89,5 @@ public class Phone_Camera : MonoBehaviour, IPhoneApp
         return cameraCanvas.MoveY(transitionDuration, -1, spacing.y).OnComplete(() => gameObject.SetActive(false));
     }
 
-    void GetImage()
-    {
-        Texture2D texture2D = new Texture2D(cameraTexture.width, cameraTexture.height, TextureFormat.ARGB32, false);
-        RenderTexture.active = cameraTexture;
-        texture2D.ReadPixels(new Rect(0, 0, cameraTexture.width, cameraTexture.height), 0, 0);
-        texture2D.Apply();
-
-        string path = tempPath + "/" + "SampleImage.png";
-
-        byte[] bytes = texture2D.EncodeToPNG();
-        
-        File.WriteAllBytes(path, bytes);
-        
-        SetImage();
-    }
-
-    void SetImage()
-    {
-        Texture2D texture2D = new Texture2D(cameraTexture.width, cameraTexture.height);
-        string path = tempPath + "/" + "SampleImage.png";
-        byte[] bytes = File.ReadAllBytes(path);
-
-        texture2D.LoadImage(bytes);
-        texture2D.Apply();
-
-        image.texture = texture2D;
-    }
+    
 }
