@@ -5,12 +5,12 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AppManager : MonoBehaviour, IPhoneNavigation
+public class Phone_AppIconManager : MonoBehaviour, IPhoneApp
 {
     [SerializeField] private float scrollSpeed = 0.15f;
-    [SerializeField] private App initialApp;
+    [SerializeField] private AppIcon initialApp;
     
-    private App _currentApp;
+    private AppIcon _currentApp;
     private bool _allowScroll = true;
     private Phone _phone;
     
@@ -23,7 +23,7 @@ public class AppManager : MonoBehaviour, IPhoneNavigation
         _phone = phone;
     }
     
-    public void Navigate(float x, float y)
+    public void OnJoystickMove(float x, float y)
     {
         int xInt = Mathf.RoundToInt(x);
         int yInt = Mathf.RoundToInt(y);
@@ -36,12 +36,12 @@ public class AppManager : MonoBehaviour, IPhoneNavigation
         _allowScroll = false;
         timer.AppendInterval(scrollSpeed).OnComplete(() => _allowScroll = true);
         
-        App nextApp = (xInt, yInt) switch
+        AppIcon nextApp = (xInt, yInt) switch
         {
-            (0, 1) => _currentApp.FindSelectableOnUp() as App,
-            (0, -1) => _currentApp.FindSelectableOnDown() as App,
-            (1, 0) => _currentApp.FindSelectableOnRight() as App,
-            (-1, 0) => _currentApp.FindSelectableOnLeft() as App,
+            (0, 1) => _currentApp.FindSelectableOnUp() as AppIcon,
+            (0, -1) => _currentApp.FindSelectableOnDown() as AppIcon,
+            (1, 0) => _currentApp.FindSelectableOnRight() as AppIcon,
+            (-1, 0) => _currentApp.FindSelectableOnLeft() as AppIcon,
             _ => _currentApp
         };
 
@@ -53,17 +53,17 @@ public class AppManager : MonoBehaviour, IPhoneNavigation
         _currentApp.Select();
     }
 
-    public void StartNavigation()
+    public void StartApp()
     {
         
     }
 
-    public void Confirm()
+    public void OnThumbStickDown()
     {
         _currentApp.Confirm(_phone);
     }
 
-    public Tween EndNavigation()
+    public Tween ExitApp()
     {
         return null;
     }

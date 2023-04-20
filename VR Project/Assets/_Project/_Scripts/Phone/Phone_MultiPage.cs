@@ -5,13 +5,13 @@ using System.Linq;
 using DG.Tweening;
 using UnityEngine;
 
-public class PageManager : MonoBehaviour, IPhoneNavigation
+public class Phone_MultiPage : MonoBehaviour, IPhoneApp
 {
     [Header("Settings")]
-    [SerializeField] protected CustomUIElement initialPage;
-    [SerializeField] protected GameObject panelHolder;
-    [SerializeField] protected float transitionDuration = 0.5f;
-    [SerializeField] protected Vector3 spacing;
+    [SerializeField] private CustomUIElement initialPage;
+    [SerializeField] private GameObject panelHolder;
+    [SerializeField] private float transitionDuration = 0.5f;
+    [SerializeField] private Vector3 spacing;
     [SerializeField] private List<CustomUIElement> allPages;
 
     private int _currentIndex;
@@ -48,12 +48,12 @@ public class PageManager : MonoBehaviour, IPhoneNavigation
         _currentIndex += increment;
     }
 
-    public virtual void Navigate(float x, float y)
+    public void OnJoystickMove(float x, float y)
     {
         MovePage(Mathf.RoundToInt(x));
     }
 
-    public void StartNavigation()
+    public void StartApp()
     {
         _currentIndex = 0;
         
@@ -66,12 +66,12 @@ public class PageManager : MonoBehaviour, IPhoneNavigation
         initialPage.MoveY(transitionDuration, 1, spacing.y);
     }
 
-    public virtual void Confirm()
+    public void OnThumbStickDown()
     {
         
     }
 
-    public Tween EndNavigation()
+    public Tween ExitApp()
     {
         CustomUIElement currentPage = allPages[_currentIndex];
         return currentPage.MoveY(transitionDuration, -1, spacing.y).OnComplete(() => gameObject.SetActive(false));

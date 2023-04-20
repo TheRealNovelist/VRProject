@@ -716,12 +716,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8db5eb5347dde3408edfcf2da043c06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialPage: {fileID: 101714456742292222}
-  panelHolder: {fileID: 753813081096844174}
+  cameraCanvas: {fileID: 101714456742292222}
   transitionDuration: 0.25
   spacing: {x: 0, y: 0, z: 0}
-  allPages:
-  - {fileID: 101714456742292222}
+  cameraTexture: {fileID: 8400000, guid: ee3401023630c9341bfc60e523993fbb, type: 2}
+  tempPath: D:\Unity Project\VRProject\TempImages
   cameraOnPhone: {fileID: 1038234425}
   displayText: {fileID: 5958354661613450691}
   normalMask:
@@ -733,6 +732,7 @@ MonoBehaviour:
   ghostMask:
     serializedVersion: 2
     m_Bits: 81719
+  initialMode: 0
 --- !u!1 &3559012251788569174
 GameObject:
   m_ObjectHideFlags: 0
@@ -1953,7 +1953,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   verticalPhone: {fileID: 604045513741539938}
-  horizontalPhone: {fileID: 6908825100561211802}
   app: {fileID: 8635570857650868980}
   _componentsToDisable:
   - {fileID: 0}

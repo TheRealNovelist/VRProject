@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class App : Selectable
+public class AppIcon : Selectable
 {
     [Space]
     public GameObject appToCall;
@@ -27,12 +27,12 @@ public class App : Selectable
         }
         
         appToCall.gameObject.SetActive(true);
-        IPhoneNavigation newNav = appToCall.GetComponent<IPhoneNavigation>();
+        IPhoneApp newNav = appToCall.GetComponent<IPhoneApp>();
 
         if (newNav == null)
             return;
         
         phone.SetNav(newNav);
-        newNav.StartNavigation();
+        newNav.StartApp();
     }
 }

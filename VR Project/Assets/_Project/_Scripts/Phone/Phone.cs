@@ -9,7 +9,7 @@ using UnityEngine;
 public class Phone : GrabbableEvents
 {
     public GameObject verticalPhone;
-    public AppManager app;
+    public Phone_AppIconManager app;
     
     [Space]
     [SerializeField] private List<MonoBehaviour> _componentsToDisable;
@@ -17,7 +17,8 @@ public class Phone : GrabbableEvents
     private ControllerHand _handSide;
     private bool _allowNavigation = false;
     
-    private IPhoneNavigation _currentNav;
+    private IPhoneApp _currentNav;
+    
     private void Update()
     {
         if (!_allowNavigation) 
@@ -48,14 +49,14 @@ public class Phone : GrabbableEvents
                 break;
         }
             
-        _currentNav?.Navigate(xAxis, yAxis);
+        _currentNav?.OnJoystickMove(xAxis, yAxis);
             
         if (isThumbStickDown)
-            _currentNav?.Confirm();
+            _currentNav?.OnThumbStickDown();
 
         if (isReturnButtonDown)
         {
-            Tween tween = _currentNav?.EndNavigation();
+            Tween tween = _currentNav?.ExitApp();
             SetNav(null);
             if (tween != null)
                 tween.OnComplete(() => SetNav(app));
@@ -64,7 +65,7 @@ public class Phone : GrabbableEvents
         }
     }
 
-    public void SetNav(IPhoneNavigation newNav)
+    public void SetNav(IPhoneApp newNav)
     {
         _currentNav = newNav;
     }
@@ -80,7 +81,7 @@ public class Phone : GrabbableEvents
 
     public override void OnRelease()
     {
-        _currentNav?.EndNavigation();
+        _currentNav?.ExitApp();
         _currentNav = app;
     }
 
