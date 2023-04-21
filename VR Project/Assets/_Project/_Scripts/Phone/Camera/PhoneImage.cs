@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using UnityEngine;
 
+[System.Serializable]
 public class PhoneImage
 {
     public string name;
@@ -29,18 +30,19 @@ public class PhoneImage
         
         byte[] bytes = image.EncodeToPNG();
 
-        this.name = name;
-        path = directoryPath + "/" + name + ".png";
-
+        string tempName = name;
+        path = directoryPath + "/" + tempName + ".png";
+        
         int version = 1;
         while (File.Exists(path))
         {
-            path = directoryPath + "/" + name + $"_{version}.png";
+            tempName = name + $"_{version}";
+            path = directoryPath + "/" + tempName +".png";
             version++;
         }
         
-        Debug.Log("Created new image: " + name);
-        
+        this.name = tempName;
+        Debug.Log("Created new image: " + tempName);
         File.WriteAllBytes(path, bytes);
     }
         

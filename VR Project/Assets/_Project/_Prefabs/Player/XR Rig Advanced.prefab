@@ -64760,6 +64760,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7856437068403236358}
     m_Modifications:
+    - target: {fileID: 2119634009202236277, guid: 42f0f2127fe7bcd4fb277e059c9d1326,
+        type: 3}
+      propertyPath: pageHolder
+      value: 
+      objectReference: {fileID: 1841315136753219975}
     - target: {fileID: 5594607480252478149, guid: 42f0f2127fe7bcd4fb277e059c9d1326,
         type: 3}
       propertyPath: m_RootOrder
@@ -64835,8 +64840,54 @@ PrefabInstance:
       propertyPath: m_Name
       value: Phone
       objectReference: {fileID: 0}
+    - target: {fileID: 8959447440285035898, guid: 42f0f2127fe7bcd4fb277e059c9d1326,
+        type: 3}
+      propertyPath: m_Spacing.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8959447440285035898, guid: 42f0f2127fe7bcd4fb277e059c9d1326,
+        type: 3}
+      propertyPath: m_Spacing.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8959447440285035898, guid: 42f0f2127fe7bcd4fb277e059c9d1326,
+        type: 3}
+      propertyPath: m_CellSize.x
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 8959447440285035898, guid: 42f0f2127fe7bcd4fb277e059c9d1326,
+        type: 3}
+      propertyPath: m_CellSize.y
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 8959447440285035898, guid: 42f0f2127fe7bcd4fb277e059c9d1326,
+        type: 3}
+      propertyPath: m_Padding.m_Top
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8959447440285035898, guid: 42f0f2127fe7bcd4fb277e059c9d1326,
+        type: 3}
+      propertyPath: m_Padding.m_Left
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8959447440285035898, guid: 42f0f2127fe7bcd4fb277e059c9d1326,
+        type: 3}
+      propertyPath: m_Padding.m_Right
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8959447440285035898, guid: 42f0f2127fe7bcd4fb277e059c9d1326,
+        type: 3}
+      propertyPath: m_Padding.m_Bottom
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 42f0f2127fe7bcd4fb277e059c9d1326, type: 3}
+--- !u!1 &1841315136753219975 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8701909162203541088, guid: 42f0f2127fe7bcd4fb277e059c9d1326,
+    type: 3}
+  m_PrefabInstance: {fileID: 7011768286117517287}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3236618942605911330 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5594607480252478149, guid: 42f0f2127fe7bcd4fb277e059c9d1326,

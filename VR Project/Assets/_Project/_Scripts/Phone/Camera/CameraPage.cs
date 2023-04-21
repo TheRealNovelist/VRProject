@@ -7,14 +7,15 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Phone_Camera : PhonePage
+public class CameraPage : PhonePage
 {
+    [Header("Animation Settings")]
     [SerializeField] private CustomUIElement cameraCanvas;
     [SerializeField] private float transitionDuration = 0.5f;
     [SerializeField] private Vector3 spacing;
 
     [Header("Image Settings")]
-    [SerializeField] private PhoneImageAlbum album;
+    [SerializeField] private Album album;
 
     [Header("Camera Settings")]
     [SerializeField] private Camera cameraOnPhone;
@@ -23,8 +24,7 @@ public class Phone_Camera : PhonePage
     [SerializeField] private LayerMask normalMask; 
     [SerializeField] private LayerMask xRayMask; 
     [SerializeField] private LayerMask ghostMask;
-
-    [SerializeField] private CameraMode initialMode = CameraMode.Normal;
+    
     private CameraMode _mode;
     
     private enum CameraMode
@@ -36,7 +36,7 @@ public class Phone_Camera : PhonePage
     
     private void Start()
     {
-        SwitchMode(initialMode);
+        SwitchMode(CameraMode.Normal);
     }
 
     void SwitchMode(CameraMode mode)
@@ -60,25 +60,39 @@ public class Phone_Camera : PhonePage
                 break;
         }
     }
-    
-    
-    public override void StartPage(Phone phone)
+
+    public void CycleMode()
     {
-        cameraCanvas.ResetPosition();
-        cameraCanvas.Move(new Vector3(0, -1, 0), spacing);
-        cameraCanvas.MoveY(transitionDuration, 1, spacing.y);
+        switch (_mode)
+        {
+            case CameraMode.Normal:
+                SwitchMode(CameraMode.XRay);
+                break;
+            case CameraMode.XRay:
+                SwitchMode(CameraMode.Ghost);
+                break;
+            case CameraMode.Ghost:
+                SwitchMode(CameraMode.Normal);
+                break;
+        }
     }
 
-    public override void OnThumbStickDown()
+    public void TakePicture()
     {
         album.CreateImage();
     }
-
-    public override void ExitPage(Phone phone)
+    
+    public override void StartPage()
     {
-        cameraCanvas.MoveY(transitionDuration, -1, spacing.y).OnComplete(() =>
-        {
-            gameObject.SetActive(false);
-        });
+        Debug.Log("Started Page");
+        gameObject.SetActive(true);
+        cameraCanvas.MoveFromOrigin(new Vector3(0, -1, 0), spacing);
+        cameraCanvas.MoveY(transitionDuration, 1, spacing.y);
+    }
+    
+
+    public override void ExitPage()
+    {
+        cameraCanvas.MoveY(transitionDuration, -1, spacing.y).OnComplete(() => gameObject.SetActive(false));
     }
 }
