@@ -9,7 +9,7 @@ using UnityEngine;
 public class Phone : GrabbableEvents
 {
     public GameObject verticalPhone;
-    public Phone_AppIconManager app;
+    public PhonePage startingPage;
     
     [Space]
     [SerializeField] private List<MonoBehaviour> _componentsToDisable;
@@ -17,8 +17,10 @@ public class Phone : GrabbableEvents
     private ControllerHand _handSide;
     private bool _allowNavigation = false;
     
-    private IPhoneApp _currentNav;
-    
+    private PhonePage _currentPage;
+
+    private Stack<PhonePage> activePages;
+
     private void Update()
     {
         if (!_allowNavigation) 
@@ -32,16 +34,16 @@ public class Phone : GrabbableEvents
         switch (_handSide)
         {
             case ControllerHand.Left:
-                xAxis = InputBridge.Instance.GetInputAxisValue(InputAxis.LeftThumbStickAxis).x;
-                yAxis = InputBridge.Instance.GetInputAxisValue(InputAxis.LeftThumbStickAxis).y;
-                isThumbStickDown = InputBridge.Instance.GetControllerBindingValue(ControllerBinding.LeftThumbstickDown);
-                isReturnButtonDown = InputBridge.Instance.GetControllerBindingValue(ControllerBinding.YButton);
+                xAxis = input.GetInputAxisValue(InputAxis.LeftThumbStickAxis).x;
+                yAxis = input.GetInputAxisValue(InputAxis.LeftThumbStickAxis).y;
+                isThumbStickDown = input.GetControllerBindingValue(ControllerBinding.LeftThumbstickDown);
+                isReturnButtonDown = input.GetControllerBindingValue(ControllerBinding.YButton);
                 break;
             case ControllerHand.Right:
-                xAxis = InputBridge.Instance.GetInputAxisValue(InputAxis.RightThumbStickAxis).x;
-                yAxis = InputBridge.Instance.GetInputAxisValue(InputAxis.RightThumbStickAxis).y;
-                isThumbStickDown = InputBridge.Instance.GetControllerBindingValue(ControllerBinding.RightThumbstickDown);
-                isReturnButtonDown = InputBridge.Instance.GetControllerBindingValue(ControllerBinding.BButton);
+                xAxis = input.GetInputAxisValue(InputAxis.RightThumbStickAxis).x;
+                yAxis = input.GetInputAxisValue(InputAxis.RightThumbStickAxis).y;
+                isThumbStickDown = input.GetControllerBindingValue(ControllerBinding.RightThumbstickDown);
+                isReturnButtonDown = input.GetControllerBindingValue(ControllerBinding.BButton);
                 break;
             case ControllerHand.None:
             default:
@@ -49,40 +51,29 @@ public class Phone : GrabbableEvents
                 break;
         }
             
-        _currentNav?.OnJoystickMove(xAxis, yAxis);
+        _currentPage.OnJoystickMove(xAxis, yAxis);
             
         if (isThumbStickDown)
-            _currentNav?.OnThumbStickDown();
+            _currentPage.OnThumbStickDown();
 
         if (isReturnButtonDown)
         {
-            Tween tween = _currentNav?.ExitApp();
-            SetNav(null);
-            if (tween != null)
-                tween.OnComplete(() => SetNav(app));
-            else
-                SetNav(app);
+
         }
     }
 
-    public void SetNav(IPhoneApp newNav)
-    {
-        _currentNav = newNav;
-    }
+    
     
     public override void OnGrab(Grabber grabber)
     {
         _handSide = grabber.HandSide;
         
-        SetNav(app);
         verticalPhone.SetActive(true);
-        app.Init(this);
     }
 
     public override void OnRelease()
     {
-        _currentNav?.ExitApp();
-        _currentNav = app;
+        
     }
 
     public override void OnTriggerDown()

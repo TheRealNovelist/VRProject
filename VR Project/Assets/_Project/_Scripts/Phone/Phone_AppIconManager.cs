@@ -5,7 +5,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Phone_AppIconManager : MonoBehaviour, IPhoneApp
+public class Phone_AppIconManager : PhonePage
 {
     [SerializeField] private float scrollSpeed = 0.15f;
     [SerializeField] private AppIcon initialApp;
@@ -14,16 +14,7 @@ public class Phone_AppIconManager : MonoBehaviour, IPhoneApp
     private bool _allowScroll = true;
     private Phone _phone;
     
-    public void Init(Phone phone)
-    {
-        if (_currentApp) _currentApp.Deselect();
-        
-        initialApp.Select();
-        _currentApp = initialApp;
-        _phone = phone;
-    }
-    
-    public void OnJoystickMove(float x, float y)
+    public override void OnJoystickMove(float x, float y)
     {
         int xInt = Mathf.RoundToInt(x);
         int yInt = Mathf.RoundToInt(y);
@@ -53,18 +44,22 @@ public class Phone_AppIconManager : MonoBehaviour, IPhoneApp
         _currentApp.Select();
     }
 
-    public void StartApp()
+    public override void StartPage(Phone phone)
     {
+        if (_currentApp) _currentApp.Deselect();
         
+        initialApp.Select();
+        _currentApp = initialApp;
+        _phone = phone;
     }
 
-    public void OnThumbStickDown()
+    public override void OnThumbStickDown()
     {
         _currentApp.Confirm(_phone);
     }
-
-    public Tween ExitApp()
+    
+    public override void ExitPage(Phone phone)
     {
-        return null;
+        
     }
 }

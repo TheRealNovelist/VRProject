@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class AppIcon : Selectable
 {
     [Space]
-    public GameObject appToCall;
+    public PhonePage appToCall;
     
     public override void Select()
     {
@@ -27,12 +27,6 @@ public class AppIcon : Selectable
         }
         
         appToCall.gameObject.SetActive(true);
-        IPhoneApp newNav = appToCall.GetComponent<IPhoneApp>();
-
-        if (newNav == null)
-            return;
         
-        phone.SetNav(newNav);
-        newNav.StartApp();
     }
 }

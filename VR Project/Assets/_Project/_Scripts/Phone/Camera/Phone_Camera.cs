@@ -7,14 +7,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Phone_Camera : MonoBehaviour, IPhoneApp
+public class Phone_Camera : PhonePage
 {
     [SerializeField] private CustomUIElement cameraCanvas;
     [SerializeField] private float transitionDuration = 0.5f;
     [SerializeField] private Vector3 spacing;
 
     [Header("Image Settings")]
-    [SerializeField] private ImageAlbum album;
+    [SerializeField] private PhoneImageAlbum album;
 
     [Header("Camera Settings")]
     [SerializeField] private Camera cameraOnPhone;
@@ -33,15 +33,9 @@ public class Phone_Camera : MonoBehaviour, IPhoneApp
         XRay = 1,
         Ghost = 2
     }
-
-    private void Awake()
-    {
-        album.GetAllImageFromFolder();
-    }
-
+    
     private void Start()
     {
-        
         SwitchMode(initialMode);
     }
 
@@ -67,27 +61,24 @@ public class Phone_Camera : MonoBehaviour, IPhoneApp
         }
     }
     
-    public void OnJoystickMove(float x, float y)
-    {
-
-    }
-
-    public void StartApp()
+    
+    public override void StartPage(Phone phone)
     {
         cameraCanvas.ResetPosition();
         cameraCanvas.Move(new Vector3(0, -1, 0), spacing);
         cameraCanvas.MoveY(transitionDuration, 1, spacing.y);
     }
 
-    public void OnThumbStickDown()
+    public override void OnThumbStickDown()
     {
         album.CreateImage();
     }
 
-    public Tween ExitApp()
+    public override void ExitPage(Phone phone)
     {
-        return cameraCanvas.MoveY(transitionDuration, -1, spacing.y).OnComplete(() => gameObject.SetActive(false));
+        cameraCanvas.MoveY(transitionDuration, -1, spacing.y).OnComplete(() =>
+        {
+            gameObject.SetActive(false);
+        });
     }
-
-    
 }

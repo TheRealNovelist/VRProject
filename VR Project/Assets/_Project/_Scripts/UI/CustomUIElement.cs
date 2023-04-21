@@ -59,6 +59,14 @@ public class CustomUIElement : MonoBehaviour
         _rectTransform.localPosition = position;
     }
 
+    public void MoveFromOrigin(Vector3 increment, Vector3 spacing)
+    {
+        _rectTransform.localPosition = new Vector3(
+            increment.x * (_elementWidth + spacing.x), 
+            increment.y * (_elementHeight + spacing.y), 
+            increment.z * spacing.z);
+    }
+    
     public void Move(Vector3 increment, Vector3 spacing)
     {
         _rectTransform.localPosition = new Vector3(
@@ -77,20 +85,11 @@ public class CustomUIElement : MonoBehaviour
         return _rectTransform.DOLocalMove(newPos, duration).SetUpdate(true);
     }
 
-    public Tween MoveX(float duration, float increment, float spacing)
-    {
-        return _rectTransform.DOLocalMoveX(_rectTransform.localPosition.x + increment * (_elementWidth + spacing), duration).SetUpdate(true);
-    }
+    public Tween MoveX(float duration, float increment, float spacing) => _rectTransform.DOLocalMoveX(_rectTransform.localPosition.x + increment * (_elementWidth + spacing), duration).SetUpdate(true);
 
-    public Tween MoveY(float duration, float increment, float spacing)
-    {
-        return _rectTransform.DOLocalMoveY(_rectTransform.localPosition.y + increment * (_elementHeight + spacing), duration).SetUpdate(true);
-    }
+    public Tween MoveY(float duration, float increment, float spacing) => _rectTransform.DOLocalMoveY(_rectTransform.localPosition.y + increment * (_elementHeight + spacing), duration).SetUpdate(true);
 
-    public Tween MoveZ(float duration, float increment, float spacing)
-    {
-        return _rectTransform.DOLocalMoveZ(_rectTransform.localPosition.z + increment * spacing, duration).SetUpdate(true);
-    }
+    public Tween MoveZ(float duration, float increment, float spacing) => _rectTransform.DOLocalMoveZ(_rectTransform.localPosition.z + increment * spacing, duration).SetUpdate(true);
 
     public void SetCanvasLayer(int start, int end, float duration) => StartCoroutine(CanvasLayerChange(start, end, duration));
 

@@ -334,7 +334,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 468116220691677034}
-  - component: {fileID: 3647567311830308576}
+  - component: {fileID: 2119634009202236277}
   m_Layer: 0
   m_Name: Hint Page
   m_TagString: Untagged
@@ -366,7 +366,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 127, y: 225.78}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &3647567311830308576
+--- !u!114 &2119634009202236277
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -375,18 +375,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 753813081096844174}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57f2b73f546370a48ab3a65f2618d4cb, type: 3}
+  m_Script: {fileID: 11500000, guid: 52a86e794cc4eb146a77d4ca262b3169, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialPage: {fileID: 3520539857677209197}
-  panelHolder: {fileID: 753813081096844174}
-  transitionDuration: 0.25
+  initialPage: {fileID: 0}
+  transitionDuration: 0.5
   spacing: {x: 0, y: 0, z: 0}
-  allPages:
-  - {fileID: 3520539857677209197}
-  - {fileID: 5712376828836600469}
-  - {fileID: 7582581790581826949}
-  - {fileID: 5133708140349822315}
+  panelHolder: {fileID: 0}
+  allPages: []
 --- !u!1 &1561236116005766737
 GameObject:
   m_ObjectHideFlags: 0
@@ -719,10 +715,7 @@ MonoBehaviour:
   cameraCanvas: {fileID: 101714456742292222}
   transitionDuration: 0.25
   spacing: {x: 0, y: 0, z: 0}
-  cameraTexture: {fileID: 8400000, guid: ee3401023630c9341bfc60e523993fbb, type: 2}
-  tempPath: D:\Unity Project\VRProject\TempImages
   album: {fileID: 11400000, guid: 27b88e7a0f9d2304dbba0d6fae3dca80, type: 2}
-  image: {fileID: 3003535932470081850}
   cameraOnPhone: {fileID: 1038234425}
   displayText: {fileID: 5958354661613450691}
   normalMask:
