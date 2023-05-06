@@ -5,10 +5,13 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
-public class StringLock : Lock
+public class CombinationStringLock : Lock
 {
-    [SerializeField] private TextMeshProUGUI outputText;
+    [Header("Specific Settings")]
     [SerializeField] private string combination;
+    
+    [Header("Display Settings")]
+    [SerializeField] private TextMeshProUGUI outputText;
 
     private int _combinationLength;
     private Stack<string> _inputtedValues = new();

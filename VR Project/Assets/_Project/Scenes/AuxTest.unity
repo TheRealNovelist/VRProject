@@ -509,10 +509,10 @@ MonoBehaviour:
           m_StringArgument: SUCCESS
           m_BoolArgument: 0
         m_CallState: 2
-  outputText: {fileID: 894204088}
-  currentText: {fileID: 648069870}
   maxValue: 100
-  combination: 280000001400000032000000
+  combination: 140000003200000028000000
+  outputText: {fileID: 0}
+  currentText: {fileID: 0}
 --- !u!1 &648069869
 GameObject:
   m_ObjectHideFlags: 0

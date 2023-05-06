@@ -14,16 +14,19 @@ public enum RadialDirection
 
 public class RadialLock : Lock
 {
+    [Header("Specific Settings")]
+    [SerializeField] private int maxValue = 360;
+    [SerializeField] private List<int> combination;
+    
+    [Header("Display Settings")]
     [SerializeField] private TextMeshProUGUI outputText;
     [SerializeField] private TextMeshProUGUI currentText;
-    [SerializeField] private int maxValue = 100;
-    [SerializeField] private List<int> combination;
     
     private List<int> _inputtedValues = new List<int>();
 
     private int _currentIndex = 0;
     private int _currentValue = 0;
-    private string _currentInputtedText;
+    
     private RadialDirection _currentDirection;
 
     private void Start()
@@ -41,42 +44,56 @@ public class RadialLock : Lock
 
         if (nextValue < 0)
         {
-            nextValue = maxValue - value;
+            nextValue = maxValue - Mathf.Abs(value);
         }
 
         if (nextValue == maxValue)
         {
             nextValue = 0;
         }
-        
+
         Input(nextValue);
     } 
     
-    public void Input(int value)
+    public void Input(float value)
     {
-        //Return if all value has been inputted
-        if (_currentIndex == combination.Count)
-            return;
-
+        int intVal = Mathf.RoundToInt(value);
+        
         if (_currentDirection == RadialDirection.None)
         {
-            _currentDirection = GetDirection(_inputtedValues[_currentIndex], value);
+            _currentDirection = GetDirection(_inputtedValues[_currentIndex], intVal);
         }
-        else if (_currentDirection != GetDirection(_currentValue, value))
+        else if (_currentDirection != GetDirection(_currentValue, intVal))
         {
-            _currentDirection = GetDirection(_currentValue, value);
             _currentIndex += 1;
+            
+            if (_currentIndex < 3)
+            {
+                _currentDirection = GetDirection(_currentValue, intVal);
+            }
+            else
+            {
+                ResetLock();
+            }
         }
 
-        _currentValue = value;
-        _inputtedValues[_currentIndex] = value;
+        _currentValue = intVal;
+
+        if (_currentIndex < combination.Count)
+        {
+            _inputtedValues[_currentIndex] = intVal;
+        }
+        
         UpdateText();
     }
 
     private void UpdateText()
     {
-        outputText.text = string.Join(" ", _inputtedValues);
-        currentText.text = _currentValue.ToString();
+        if (outputText)
+            outputText.text = string.Join(" ", _inputtedValues);
+        
+        if (currentText)
+            currentText.text = _currentValue.ToString();
     }
     
     private RadialDirection GetDirection(int current, int next)
@@ -85,7 +102,11 @@ public class RadialLock : Lock
         {
             if (current == maxValue - 10)
                 return RadialDirection.Clockwise;
-            if (current == 10)
+        }
+
+        if (current == 0)
+        {
+            if (next == maxValue - 10)
                 return RadialDirection.AntiClockwise;
         }
         
