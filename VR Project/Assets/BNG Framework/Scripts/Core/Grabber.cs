@@ -450,7 +450,7 @@ namespace BNG {
         }
 
         // Release conditions are a little different than grab
-        bool inputCheckRelease() {
+        protected virtual bool inputCheckRelease() {
 
             var grabbingGrabbable = RemoteGrabbingItem ? flyingGrabbable : HeldGrabbable;
 
@@ -474,7 +474,7 @@ namespace BNG {
             return false;
         }
 
-        float getGrabInput(GrabButton btn) {
+        protected virtual float getGrabInput(GrabButton btn) {
             float gripValue = 0;
 
             if(input == null) {
@@ -483,7 +483,10 @@ namespace BNG {
 
             // Left Hand
             if (HandSide == ControllerHand.Left) {
-                if (btn == GrabButton.Grip) {
+                if(btn == GrabButton.GripOrTrigger) {
+                    gripValue = Mathf.Max(input.LeftGrip, input.LeftTrigger);
+                }
+                else if (btn == GrabButton.Grip) {
                     gripValue = input.LeftGrip;
                 }
                 else if (btn == GrabButton.Trigger) {
@@ -492,7 +495,11 @@ namespace BNG {
             }
             // Right Hand
             else if (HandSide == ControllerHand.Right) {
-                if (btn == GrabButton.Grip) {
+                // Either Grip or Trigger will work
+                if (btn == GrabButton.GripOrTrigger) {
+                    gripValue = Mathf.Max(input.RightGrip, input.RightTrigger);
+                }
+                else if (btn == GrabButton.Grip) {
                     gripValue = input.RightGrip;
                 }
                 else if (btn == GrabButton.Trigger) {
@@ -503,7 +510,7 @@ namespace BNG {
             return gripValue;
         }
 
-        bool getToggleInput(GrabButton btn) {
+        protected virtual bool getToggleInput(GrabButton btn) {
 
             if (input == null) {
                 return false;
@@ -511,7 +518,10 @@ namespace BNG {
 
             // Left Hand
             if (HandSide == ControllerHand.Left) {
-                if (btn == GrabButton.Grip) {
+                if (btn == GrabButton.GripOrTrigger) {
+                    return input.LeftGripDown || input.LeftTriggerDown;
+                }
+                else if (btn == GrabButton.Grip) {
                     return input.LeftGripDown;
                 }
                 else if (btn == GrabButton.Trigger) {
@@ -520,7 +530,10 @@ namespace BNG {
             }
             // Right Hand
             else if (HandSide == ControllerHand.Right) {
-                if (btn == GrabButton.Grip) {
+                if (btn == GrabButton.GripOrTrigger) {
+                    return input.RightGripDown || input.RightTriggerDown;
+                }
+                else if (btn == GrabButton.Grip) {
                     return input.RightGripDown;
                 }
                 else if (btn == GrabButton.Trigger) {

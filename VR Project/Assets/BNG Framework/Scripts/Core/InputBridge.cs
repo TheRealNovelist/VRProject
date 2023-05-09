@@ -93,7 +93,8 @@ namespace BNG {
     public enum GrabButton {
         Grip,
         Trigger,
-        Inherit
+        Inherit, // Inherit from Grabber
+        GripOrTrigger // Either Grip or Trigger will work
     }
 
     public enum HoldType {

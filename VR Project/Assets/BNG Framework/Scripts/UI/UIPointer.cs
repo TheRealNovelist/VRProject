@@ -87,44 +87,44 @@ namespace BNG {
         XRRayInteractor xrRay;
         XRInteractorLineVisual vis;
 
-        public virtual void SetupXRITRaycaster() {
-            // Check if user has already added any components
-            xrRay = gameObject.GetComponent<XRRayInteractor>();
-            vis = gameObject.GetComponent<XRInteractorLineVisual>();
+public virtual void SetupXRITRaycaster() {
+    // Check if user has already added any components
+    xrRay = gameObject.GetComponent<XRRayInteractor>();
+    vis = gameObject.GetComponent<XRInteractorLineVisual>();
+    Gradient curColor = null;
 
-            if(xrRay == null) {
+    if(xrRay == null) {
 
-                xrRay = gameObject.AddComponent<XRRayInteractor>();
-                ActionBasedController abc = gameObject.AddComponent<ActionBasedController>();
+        xrRay = gameObject.AddComponent<XRRayInteractor>();
+        ActionBasedController abc = gameObject.AddComponent<ActionBasedController>();
 
-                // Setup default ui input action
-                if (VRUISystem.Instance.UIInputAction != null) {
-                    abc.uiPressAction = new UnityEngine.InputSystem.InputActionProperty(VRUISystem.Instance.UIInputAction);
+        // Setup default ui input action
+        if (VRUISystem.Instance.UIInputAction != null) {
+            abc.uiPressAction = new UnityEngine.InputSystem.InputActionProperty(VRUISystem.Instance.UIInputAction);
 
-                    // For testing
-                    abc.selectAction = new UnityEngine.InputSystem.InputActionProperty(VRUISystem.Instance.UIInputAction);
-                }
-
-                Gradient curColor = null;
-                LineRenderer lr = GetComponent<LineRenderer>();
-                if(lr) {
-                    lr.useWorldSpace = true;
-                    curColor = lr.colorGradient;
-                }
-            }
-
-            if(vis == null) {
-                // Setup XRay Visual
-                vis = gameObject.AddComponent<XRInteractorLineVisual>();
-                vis.lineWidth = 0.01f;
-
-                // Setup the color
-                if(curColor != null) {
-                    vis.validColorGradient = curColor;
-                    vis.invalidColorGradient = curColor;
-                }
-            }
+            // For testing
+            abc.selectAction = new UnityEngine.InputSystem.InputActionProperty(VRUISystem.Instance.UIInputAction);
         }
+                
+        LineRenderer lr = GetComponent<LineRenderer>();
+        if(lr) {
+            lr.useWorldSpace = true;
+            curColor = lr.colorGradient;
+        }
+    }
+
+    if(vis == null) {
+        // Setup XRay Visual
+        vis = gameObject.AddComponent<XRInteractorLineVisual>();
+        vis.lineWidth = 0.01f;
+
+        // Setup the color
+        if(curColor != null) {
+            vis.validColorGradient = curColor;
+            vis.invalidColorGradient = curColor;
+        }
+    }
+}
 #endif
 
         void OnEnable() {

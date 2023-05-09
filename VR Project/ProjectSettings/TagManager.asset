@@ -16,12 +16,12 @@ TagManager:
   - Restricted
   - Player
   - Grabbable
-  - XR Teleport
-  - Post-Processing
-  - Environment
-  - Damageable
-  - Outline
-  - Hidden
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 
@@ -38,12 +38,6 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Fader
-    uniqueID: 2075048883
-    locked: 0
   - name: Default
     uniqueID: 0
-    locked: 0
-  - name: Menu
-    uniqueID: 3580810263
     locked: 0

@@ -10,7 +10,7 @@ namespace BNG {
     /// </summary>
     public class DemoScript : MonoBehaviour {
 
-        public Text LabelToUpdate;
+        public TMPro.TMP_Text LabelToUpdate;
 
         /// <summary>
         /// Used in the demo scene to shoot various objects

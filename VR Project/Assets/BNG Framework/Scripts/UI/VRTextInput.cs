@@ -16,6 +16,8 @@ namespace BNG {
 
         bool isFocused, wasFocused = false;
 
+        float lastActivatedTime = 0;
+
         void Awake() {
             thisInputField = GetComponent<UnityEngine.UI.InputField>();
             
@@ -46,11 +48,14 @@ namespace BNG {
                 AttachedKeyboard.gameObject.SetActive(true);
 
                 AttachedKeyboard.AttachToInputField(thisInputField);
+
+                lastActivatedTime = Time.time;
             }
         }
 
         public void OnInputDeselect() {
-            if (DeactivateKeyboardOnDeselect && AttachedKeyboard != null && AttachedKeyboard.gameObject.activeInHierarchy) {
+            // Deslect if valid keyboard is found, and did not recently activate
+            if (DeactivateKeyboardOnDeselect && AttachedKeyboard != null && AttachedKeyboard.gameObject.activeInHierarchy && Time.time - lastActivatedTime >= 0.1f) {
                 AttachedKeyboard.gameObject.SetActive(false);
             }
         }

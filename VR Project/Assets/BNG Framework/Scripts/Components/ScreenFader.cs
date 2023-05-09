@@ -69,6 +69,7 @@ namespace BNG {
                 fadeObjectRect.pivot = new Vector2(0.5f, 0.5f);
                 fadeObjectRect.sizeDelta = new Vector2(0.2f, 0.2f);
                 fadeObjectRect.localScale = new Vector2(2f, 2f);
+
             }
         }
 

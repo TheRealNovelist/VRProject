@@ -12,6 +12,6 @@ public class HealthDisplay : MonoBehaviour
     
     private void OnGUI()
     {
-        text.text = playerHealth.Health + " : " + playerHealth.maxHealth;
+
     }
 }
