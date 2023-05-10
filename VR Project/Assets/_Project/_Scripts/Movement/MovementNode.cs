@@ -11,41 +11,49 @@ public class MovementNode : MonoBehaviour
     [SerializeField] private List<MovementNode> connections;
     [SerializeField] private bool usePlayerHeight = true;
 
+    [SerializeField] private GameObject cursor;
     [SerializeField] private GameObject highlight;
-    
-    private Collider _collider => GetComponent<Collider>();
 
     private void Awake()
     {
-        foreach (MovementNode node in connections)
-        {
-            
-        }
+        OnDeselected();
+        SetNodeActive(false);
     }
 
     public void OnSelected()
     {
-        highlight.SetActive(true);
+        if (highlight) highlight.SetActive(true);
+        Debug.Log($"Selected {gameObject.name}");
     }
 
     public void OnDeselected()
     {
-        highlight.SetActive(false);
+        if (highlight) highlight.SetActive(false);
+        Debug.Log($"Deselected {gameObject.name}");
     }
 
     public void OnTeleportTo()
     {
-        _collider.enabled = false;
+        OnDeselected();
+        SetNodeActive(false);
     }
 
     public void OnTeleportOut()
     {
-        _collider.enabled = true;
+        SetConnectionsActive(false);
     }
 
-    public void SetNodeActive(bool isActive)
+    public void SetConnectionsActive(bool isActive)
     {
-        
+        foreach (var connection in connections)
+        {
+            connection.SetNodeActive(isActive);
+        }
+    }
+
+    private void SetNodeActive(bool isActive)
+    {
+        gameObject.SetActive(isActive);
     }
 
     public Vector3 GetPosition(Transform player)
