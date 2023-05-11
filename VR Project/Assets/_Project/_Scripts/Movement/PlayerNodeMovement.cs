@@ -9,15 +9,13 @@ using UnityEngine.InputSystem;
 
 public class PlayerNodeMovement : MonoBehaviour
 {
-    [Header("Initialization")]
-    [SerializeField] private MovementNode startingNode;
-
     [Header("Components")] 
     [SerializeField] private Transform pointer;
 
-    [Header("Setting")] 
-    [SerializeField] private bool instantTravel = true;
+    [Header("Setting")]
+    [SerializeField] private MovementNode startingNode;
     [SerializeField] private float travelTime = 5f;
+    [SerializeField] private LayerMask mask = Physics.DefaultRaycastLayers;
 
     private MovementNode _currentNode;
     private MovementNode _nextNodeSelected;
@@ -26,6 +24,8 @@ public class PlayerNodeMovement : MonoBehaviour
     private InputBridge _input;
     
     private bool _startedSearching;
+
+    private bool _isGrabbing;
     
     private void Awake()
     {
@@ -35,85 +35,81 @@ public class PlayerNodeMovement : MonoBehaviour
         _fader.FadeInSpeed = travelTime;
         _fader.FadeOutSpeed = travelTime;
         
-        TeleportToNode(startingNode, true);
+        if (startingNode)
+            TeleportToNode(startingNode, true);
     }
 
     private void Update()
     {
         bool leftThumbstick = _input.GetInputAxisValue(InputAxis.LeftThumbStickAxis).y >= 0.75;
-        
-        if ((leftThumbstick || Input.GetKeyDown(KeyCode.W)) && !_startedSearching)
+
+        _isGrabbing = _input.LeftGripDown || _input.RightGripDown || Input.GetKey(KeyCode.Space);
+
+        if ((Input.GetKeyDown(KeyCode.W)) /*&& !_startedSearching*/)
         {
             _startedSearching = true;
             _currentNode.SetConnectionsActive(true);
         }
         
-        if (leftThumbstick || Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.W))
         {
             SearchNode();
         }
 
-        if ((!leftThumbstick || Input.GetKeyUp(KeyCode.W)) && _startedSearching)
+        if ((Input.GetKeyUp(KeyCode.W)) /*&& _startedSearching*/)
         {
             _startedSearching = false;
             _currentNode.SetConnectionsActive(false);
-            
+
             if (_nextNodeSelected != null)
+            {
+                _nextNodeSelected.OnDeselected();
                 TeleportToNode(_nextNodeSelected);
+            }
         }
     }
 
     [Button]
     private void TeleportToNode(MovementNode node, bool instant = false)
     {
-        if (_currentNode != null)
-            _currentNode.OnTeleportOut();
+        if (!node.CanTeleport())
+            return;
+
+        if (_currentNode) _currentNode.SetNodeActive(false);
         
         _currentNode = node;
-
-        Vector3 destination = _currentNode.GetPosition(transform);
-
+        
         if (instant)
         {
-            transform.position = destination;
-            _currentNode.OnTeleportTo();
+            _currentNode.Teleport(transform);
             return;
         }
         
-        if (instantTravel)
-        {
-            StartCoroutine(InstantTeleport(destination));
-        }
-        else
-        {
-            BlinkTeleport(destination);
-        }
-        
-        _currentNode.OnTeleportTo();
+        StartCoroutine(InstantTeleport());
     }
 
-    private void BlinkTeleport(Vector3 destination)
-    {
-        transform.DOMove(destination, travelTime);
-    }
-
-    private IEnumerator InstantTeleport(Vector3 destination)
+    private IEnumerator InstantTeleport()
     {
         _fader.DoFadeIn();
 
         yield return new WaitForSeconds(travelTime / 2);
+
+        _currentNode.Teleport(transform, out bool animate);
         
-        transform.position = destination;
-        _fader.DoFadeOut();
+        if (animate)
+        {
+            _fader.DoFadeOut();
+        }
     }
 
     private void SearchNode()
     {
-        if (Physics.Raycast(pointer.transform.position, pointer.forward, out RaycastHit hit, Mathf.Infinity))
+        if (Physics.Raycast(pointer.transform.position,pointer.forward, out RaycastHit hit,
+                Mathf.Infinity,mask, QueryTriggerInteraction.Ignore))
         {
-            Debug.DrawLine(pointer.transform.position, pointer.forward * 100f, Color.green);
             GameObject obj = hit.collider.gameObject;
-            Debug.Log(obj.name);
+            Debug.DrawLine(pointer.transform.position, hit.point, Color.green);
+            
             if (obj.TryGetComponent(out MovementNode node))
             {
                 if (node != _nextNodeSelected && _nextNodeSelected != null)
@@ -123,15 +119,17 @@ public class PlayerNodeMovement : MonoBehaviour
                 }
                 
                 _nextNodeSelected = node;
-                node.OnSelected();
+                node.OnSelected(_isGrabbing);
+                return;
             }
-            else
-            {
-                if (_nextNodeSelected == null) return;
-                
-                _nextNodeSelected.OnDeselected();
-                _nextNodeSelected = null;
-            }
+        }
+        
+        Debug.DrawRay(pointer.transform.position, pointer.forward, Color.red);
+
+        if (_nextNodeSelected != null)
+        {
+            _nextNodeSelected.OnDeselected();
+            _nextNodeSelected = null;
         }
     }
 }
