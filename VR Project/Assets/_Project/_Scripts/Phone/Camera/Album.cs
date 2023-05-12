@@ -47,29 +47,27 @@ public class Album : MonoBehaviour
     public void CreateImage() => CreateImage(refTexture);
     public void CreateImage(RenderTexture texture)
     {
-        PhoneImage newImage = new PhoneImage(texture, DirectoryPath, NameFormat);
+        PhoneImage newImage = new (texture, DirectoryPath, NameFormat);
               
         allImages.Add(newImage);
     }
 
     public bool LoadAllImageFromFolder(out List<PhoneImage> images)
     {
+        images = new List<PhoneImage>();
+        
         string[] files = Directory.GetFiles(DirectoryPath, "*.png");
 
         if (files.Length <= 0)
         {
-            images = new List<PhoneImage>();
             return false;
         }
-        
-        List<PhoneImage> allImagesFromFolder = new();
 
         foreach (string file in files)
         {
-            allImagesFromFolder.Add(new PhoneImage(file, refTexture.width, refTexture.height));
+            images.Add(new PhoneImage(file, refTexture.width, refTexture.height));
         }
-
-        images = allImagesFromFolder;
+        
         return true;
     }
 

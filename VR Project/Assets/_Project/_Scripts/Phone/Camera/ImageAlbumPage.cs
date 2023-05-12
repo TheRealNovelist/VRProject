@@ -8,17 +8,8 @@ public class ImageAlbumPage : MultiPage
 {
     [Header("Image")]
     [SerializeField] private Album album;
-
-    private void OnEnable()
-    {
-        if (album.allImages.Count > 0)
-        {
-            foreach (var image in album.allImages)
-            {
-                CreateImagePage(image);
-            }
-        }
-    }
+    
+    
     
     public void CreateImagePage(PhoneImage image)
     {

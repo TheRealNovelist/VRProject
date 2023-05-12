@@ -179,6 +179,5 @@ public class MultiPage : PhonePage
     {
         CustomUIElement currentPage = allPages.Count > 0 ? pageAndButtonHolder : blankPage;
         currentPage.MoveY(transitionDuration, -1, spacing.y).OnComplete(() => gameObject.SetActive(false));
-        DeleteAllPage();
     }
 }
