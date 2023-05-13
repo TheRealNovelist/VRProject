@@ -42,7 +42,7 @@ public class PhoneImage
         }
         
         this.name = tempName;
-        Debug.Log("Created new image: " + tempName);
+        Debug.Log($"Created new image: {tempName} + at {path}");
         File.WriteAllBytes(path, bytes);
     }
         
