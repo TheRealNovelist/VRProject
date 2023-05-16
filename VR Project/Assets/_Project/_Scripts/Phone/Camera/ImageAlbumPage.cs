@@ -11,10 +11,10 @@ public class ImageAlbumPage : MultiPage
     
     
     
-    public void CreateImagePage(PhoneImage image)
+    public void CreateImagePage(Photo image)
     {
         Debug.Log("Create new image page!");
-        CustomUIElement element = CreatePage();
+        UIAnimation element = CreatePage();
         PhoneImageHolder imageHolder = element.GetComponent<PhoneImageHolder>();
 
         imageHolder.SetImage(image);
@@ -22,6 +22,6 @@ public class ImageAlbumPage : MultiPage
 
     public void DeleteImage()
     {
-        DeletePage(page => album.DeleteImage(page.GetComponent<PhoneImageHolder>().Image));
+        DeletePage(page => album.DeletePhoto(page.GetComponent<PhoneImageHolder>().image));
     }
 }

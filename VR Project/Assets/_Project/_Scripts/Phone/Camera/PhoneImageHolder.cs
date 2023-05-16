@@ -5,7 +5,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(RawImage))]
 public class PhoneImageHolder : MonoBehaviour
 {
-    public PhoneImage Image { get; private set; }
+    public Photo image { get; private set; }
     private RawImage _rImage;
 
     public void Awake()
@@ -13,9 +13,15 @@ public class PhoneImageHolder : MonoBehaviour
         _rImage = GetComponent<RawImage>();
     }
 
-    public void SetImage(PhoneImage imageToSet)
+    public void OnDisable()
     {
-        Image = imageToSet;
-        _rImage.texture = imageToSet.image;
+        image = null;
+        _rImage.texture = null;
+    }
+
+    public void SetImage(Photo imageToSet)
+    {
+        image = imageToSet;
+        _rImage.texture = imageToSet.texture;
     }
 }

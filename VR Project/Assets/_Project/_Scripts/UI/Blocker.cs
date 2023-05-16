@@ -9,11 +9,12 @@ public class Blocker : MonoBehaviour
 {
     private Image _blocker => GetComponent<Image>();
     
-    public void SetBlockerAlpha(float from, float to, float duration, bool keepBlockerOn = false)
+    public Tween SetBlockerAlpha(float from, float to, float duration, bool keepBlockerOn = false)
     { 
         gameObject.SetActive(true);
         SetBlockerAlpha(from);
-        _blocker.DOFade(to, duration).SetUpdate(true)
+        
+        return _blocker.DOFade(to, duration).SetUpdate(true)
             .OnComplete(() =>
             {
                 if (!keepBlockerOn)

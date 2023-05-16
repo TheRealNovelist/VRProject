@@ -9,11 +9,11 @@ using UnityEngine;
 [SelectionBase]
 public class PhonePageManager : MonoBehaviour
 {
-    [SerializeField] private PhonePage startingPage;
+    [SerializeField] private App startingPage;
     
-    private PhonePage _currentPage;
+    private App _currentPage;
 
-    private Stack<PhonePage> activePages = new();
+    private Stack<App> activePages = new();
 
     private void Awake()
     {
@@ -26,16 +26,16 @@ public class PhonePageManager : MonoBehaviour
         PushPage(startingPage);
     }
 
-    public void PushPage(PhonePage page)
+    public void PushPage(App page)
     {
         Debug.Log("Pushed page " + page.name);
-        page.StartPage();
+        page.Enter();
 
         if (activePages.Count > 0)
         {
-            PhonePage topPage = activePages.Peek();
+            App topPage = activePages.Peek();
             
-            topPage.ExitPage();
+            topPage.Exit();
         }
         
         activePages.Push(page);
@@ -45,8 +45,8 @@ public class PhonePageManager : MonoBehaviour
     {
         if (activePages.Count > 1)
         {
-            PhonePage topPage = activePages.Pop();
-            topPage.ExitPage();
+            App topPage = activePages.Pop();
+            topPage.Exit();
         }
     }
 

@@ -2,33 +2,33 @@
 using UnityEngine;
 
 [System.Serializable]
-public class PhoneImage
+public class Photo
 {
     public string name;
-    public Texture2D image;
+    public Texture2D texture;
         
     private string path;
 
-    public PhoneImage(string path, int width, int height)
+    public Photo(string path, int width, int height)
     {
         this.path = path;
             
         byte[] bytes = File.ReadAllBytes(path);
         name = Path.GetFileNameWithoutExtension(path);
             
-        image = new Texture2D(width, height);
-        image.LoadImage(bytes);
-        image.Apply();
+        texture = new Texture2D(width, height);
+        texture.LoadImage(bytes);
+        texture.Apply();
     }
         
-    public PhoneImage(RenderTexture texture, string directoryPath, string name)
+    public Photo(RenderTexture texture, string directoryPath, string name)
     {
-        image = new Texture2D(texture.width, texture.height, TextureFormat.ARGB32, false);
+        this.texture = new Texture2D(texture.width, texture.height, TextureFormat.ARGB32, false);
         RenderTexture.active = texture;
-        image.ReadPixels(new Rect(0, 0, texture.width, texture.height), 0, 0);
-        image.Apply();
+        this.texture.ReadPixels(new Rect(0, 0, texture.width, texture.height), 0, 0);
+        this.texture.Apply();
         
-        byte[] bytes = image.EncodeToPNG();
+        byte[] bytes = this.texture.EncodeToPNG();
 
         string tempName = name;
         path = directoryPath + "/" + tempName + ".png";

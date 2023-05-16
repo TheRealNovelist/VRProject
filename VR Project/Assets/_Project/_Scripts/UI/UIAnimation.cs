@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
-public class CustomUIElement : MonoBehaviour
+public class UIAnimation : MonoBehaviour
 {
     public Blocker blocker;
-
+    
     private RectTransform _rectTransform => GetComponent<RectTransform>();
     
     private Vector3 _elementScale;
@@ -53,13 +53,12 @@ public class CustomUIElement : MonoBehaviour
     {
         return _elementHeight;
     }
-    
-    public void SetLocalPosition(Vector3 position)
-    {
-        _rectTransform.localPosition = position;
-    }
 
-    public void MoveFromOrigin(Vector3 increment, Vector3 spacing)
+    public void SetPosition(Vector3 position) => _rectTransform.position = position;
+    
+    public void SetLocalPosition(Vector3 position) => _rectTransform.localPosition = position;
+
+    public void MoveFromOrigin(Vector3 increment, Vector3 spacing = default)
     {
         _rectTransform.localPosition = new Vector3(
             increment.x * (_elementWidth + spacing.x), 
@@ -67,7 +66,7 @@ public class CustomUIElement : MonoBehaviour
             increment.z * spacing.z);
     }
     
-    public void Move(Vector3 increment, Vector3 spacing)
+    public void Move(Vector3 increment, Vector3 spacing = default)
     {
         _rectTransform.localPosition = new Vector3(
             _rectTransform.localPosition.x + increment.x * (_elementWidth + spacing.x), 
@@ -75,7 +74,7 @@ public class CustomUIElement : MonoBehaviour
             _rectTransform.localPosition.z + increment.z * spacing.z);
     }
 
-    public Tween Move(float duration, Vector3 increment, Vector3 spacing)
+    public Tween Move(float duration, Vector3 increment, Vector3 spacing = default)
     {
         Vector3 newPos = new Vector3(
             _rectTransform.localPosition.x + increment.x * (_elementWidth + spacing.x), 
@@ -85,11 +84,32 @@ public class CustomUIElement : MonoBehaviour
         return _rectTransform.DOLocalMove(newPos, duration).SetUpdate(true);
     }
 
-    public Tween MoveX(float duration, float increment, float spacing) => _rectTransform.DOLocalMoveX(_rectTransform.localPosition.x + increment * (_elementWidth + spacing), duration).SetUpdate(true);
+    /// <summary>
+    /// Move UI Horizontally
+    /// </summary>
+    /// <param name="duration">Duration of the animation</param>
+    /// <param name="increment">How much UI will move | [-] Left | [+] Right</param>
+    /// <param name="spacing">Additional spacing</param>
+    /// <returns></returns>
+    public Tween MoveX(float duration, float increment, float spacing = 0) => _rectTransform.DOLocalMoveX(_rectTransform.localPosition.x + increment * (_elementWidth + spacing), duration).SetUpdate(true);
 
-    public Tween MoveY(float duration, float increment, float spacing) => _rectTransform.DOLocalMoveY(_rectTransform.localPosition.y + increment * (_elementHeight + spacing), duration).SetUpdate(true);
+    /// <summary>
+    /// Move UI Vertically
+    /// </summary>
+    /// <param name="duration">Duration of the animation</param>
+    /// <param name="increment">How much UI will move | [-] Down  [+] Up</param>
+    /// <param name="spacing">Additional spacing</param>
+    /// <returns></returns>
+    public Tween MoveY(float duration, float increment, float spacing = 0) => _rectTransform.DOLocalMoveY(_rectTransform.localPosition.y + increment * (_elementHeight + spacing), duration).SetUpdate(true);
 
-    public Tween MoveZ(float duration, float increment, float spacing) => _rectTransform.DOLocalMoveZ(_rectTransform.localPosition.z + increment * spacing, duration).SetUpdate(true);
+    /// <summary>
+    /// Move UI Back and Forth
+    /// </summary>
+    /// <param name="duration">Duration of the animation</param>
+    /// <param name="increment">How much UI will move | [-] Back | [+] Forth</param>
+    /// <param name="spacing">Additional spacing</param>
+    /// <returns></returns>
+    public Tween MoveZ(float duration, float increment, float spacing = 0) => _rectTransform.DOLocalMoveZ(_rectTransform.localPosition.z + increment * spacing, duration).SetUpdate(true);
 
     public void SetCanvasLayer(int start, int end, float duration) => StartCoroutine(CanvasLayerChange(start, end, duration));
 
@@ -98,6 +118,17 @@ public class CustomUIElement : MonoBehaviour
         SetCanvasLayer(start);
         yield return new WaitForSeconds(duration);
         SetCanvasLayer(end);
+    }
+
+    public void ResetUI()
+    {
+        ResetPosition();
+        ResetScale();
+    }
+    
+    public void ResetScale()
+    {
+        _rectTransform.localScale = _elementScale;
     }
     
     public void ResetPosition()

@@ -16,7 +16,6 @@ public class Album : MonoBehaviour
     [Space]
     [SerializeField] private RenderTexture refTexture;
     
-
     private string NameFormat => 
         overrideName != "" ? overrideName 
             : namePrefix + DateTime.UtcNow.ToLocalTime().ToString("dd-MM-yyyy_HH.mm.ss") + nameSuffix;
@@ -33,28 +32,28 @@ public class Album : MonoBehaviour
         }
     }
     
-    public List<PhoneImage> allImages;
+    public List<Photo> allPhotos;
 
     private void Awake()
     {
-        bool success = LoadAllImageFromFolder(out allImages);
+        bool success = LoadAllPhotoFromFolder(out allPhotos);
         if (!success)
         {
             Debug.Log("No image found in file");
         }
     }
     
-    public void CreateImage() => CreateImage(refTexture);
-    public void CreateImage(RenderTexture texture)
+    public void CreatePhoto() => CreatePhoto(refTexture);
+    public void CreatePhoto(RenderTexture texture)
     {
-        PhoneImage newImage = new (texture, DirectoryPath, NameFormat);
+        Photo newImage = new (texture, DirectoryPath, NameFormat);
               
-        allImages.Add(newImage);
+        allPhotos.Add(newImage);
     }
 
-    public bool LoadAllImageFromFolder(out List<PhoneImage> images)
+    public bool LoadAllPhotoFromFolder(out List<Photo> photos)
     {
-        images = new List<PhoneImage>();
+        photos = new List<Photo>();
         
         string[] files = Directory.GetFiles(DirectoryPath, "*.png");
 
@@ -65,15 +64,15 @@ public class Album : MonoBehaviour
 
         foreach (string file in files)
         {
-            images.Add(new PhoneImage(file, refTexture.width, refTexture.height));
+            photos.Add(new Photo(file, refTexture.width, refTexture.height));
         }
         
         return true;
     }
 
-    public void DeleteImage(PhoneImage image)
+    public void DeletePhoto(Photo photo)
     {
-        allImages.Remove(image);
-        image.DeleteImage();
+        allPhotos.Remove(photo);
+        photo.DeleteImage();
     }
 }

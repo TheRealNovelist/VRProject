@@ -6,19 +6,19 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MultiPage : PhonePage
+public class MultiPage : MonoBehaviour
 {
     [Header("Animation Settings")]
-    [SerializeField] protected CustomUIElement blankPage;
+    [SerializeField] protected UIAnimation blankPage;
     [SerializeField] private float transitionDuration = 0.5f;
     [SerializeField] private Vector3 spacing;
 
     [Header("Page Settings")] 
-    [SerializeField] private CustomUIElement pageAndButtonHolder;
+    [SerializeField] private UIAnimation pageAndButtonHolder;
     [SerializeField] private GameObject pageHolder;
     [SerializeField] private GameObject pageToCreate;
     [Space]
-    protected List<CustomUIElement> allPages = new();
+    protected List<UIAnimation> allPages = new();
 
     private int _currentIndex;
     private bool _isRunning;
@@ -27,10 +27,10 @@ public class MultiPage : PhonePage
     [SerializeField] private GameObject leftButton;
     [SerializeField] private GameObject rightButton;
 
-    protected CustomUIElement CreatePage()
+    protected UIAnimation CreatePage()
     {
         GameObject newPage = Instantiate(pageToCreate, pageHolder.transform);
-        CustomUIElement pageElement = newPage.GetComponent<CustomUIElement>();
+        UIAnimation pageElement = newPage.GetComponent<UIAnimation>();
         
         allPages.Add(pageElement);
         return pageElement;
@@ -43,10 +43,10 @@ public class MultiPage : PhonePage
             Destroy(page.gameObject);
         }
 
-        allPages = new List<CustomUIElement>();
+        allPages = new List<UIAnimation>();
     }
     
-    protected bool DeletePage(Action<CustomUIElement> callback = null)
+    protected bool DeletePage(Action<UIAnimation> callback = null)
     {
         if (allPages.Count == 0)
             return false;
@@ -54,8 +54,8 @@ public class MultiPage : PhonePage
         if (_isRunning)
             return false;
         
-        CustomUIElement currentPage = allPages[_currentIndex];
-        CustomUIElement nextPage;
+        UIAnimation currentPage = allPages[_currentIndex];
+        UIAnimation nextPage;
 
         int increment;
 
@@ -122,8 +122,8 @@ public class MultiPage : PhonePage
         if (_isRunning)
             return;
         
-        CustomUIElement currentPage = allPages[_currentIndex];
-        CustomUIElement nextPage = allPages[_currentIndex + increment];
+        UIAnimation currentPage = allPages[_currentIndex];
+        UIAnimation nextPage = allPages[_currentIndex + increment];
 
         _isRunning = true;
         
@@ -143,7 +143,7 @@ public class MultiPage : PhonePage
         moveSequence.Play();
     }
 
-    public override void StartPage()
+    public void Enter()
     {
         _currentIndex = 0;
 
@@ -159,7 +159,7 @@ public class MultiPage : PhonePage
             blankPage.MoveFromOrigin(new Vector3(-1, 0, 0), spacing);
             pageAndButtonHolder.MoveFromOrigin(new Vector3(0, -1, 0), spacing);
             
-            CustomUIElement firstPage = allPages[_currentIndex];
+            UIAnimation firstPage = allPages[_currentIndex];
         
             foreach (var page in allPages)
             {
@@ -175,9 +175,9 @@ public class MultiPage : PhonePage
         }
     }
     
-    public override void ExitPage()
+    public void Exit()
     {
-        CustomUIElement currentPage = allPages.Count > 0 ? pageAndButtonHolder : blankPage;
+        UIAnimation currentPage = allPages.Count > 0 ? pageAndButtonHolder : blankPage;
         currentPage.MoveY(transitionDuration, -1, spacing.y).OnComplete(() => gameObject.SetActive(false));
     }
 }

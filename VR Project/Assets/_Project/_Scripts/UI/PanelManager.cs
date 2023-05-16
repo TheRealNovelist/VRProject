@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class PanelManager : MonoBehaviour
 {
-    [SerializeField] protected CustomUIElement initialPanel;
+    [SerializeField] protected UIAnimation initialPanel;
     [SerializeField] protected GameObject panelHolder;
     
     [SerializeField] protected float transitionDuration = 0.5f;
@@ -23,7 +23,7 @@ public class PanelManager : MonoBehaviour
     [SerializeField] private bool moveRight = false;
     [SerializeField] private bool panelStacking = true;
 
-    private readonly List<CustomUIElement> _activePanels = new List<CustomUIElement>();
+    private readonly List<UIAnimation> _activePanels = new List<UIAnimation>();
 
     private void Awake()
     {
@@ -33,7 +33,7 @@ public class PanelManager : MonoBehaviour
         }
 
         if (!initialPanel)
-            initialPanel = panelHolder.transform.GetChild(0).GetComponent<CustomUIElement>();
+            initialPanel = panelHolder.transform.GetChild(0).GetComponent<UIAnimation>();
     }
 
     private void Start()
@@ -49,7 +49,7 @@ public class PanelManager : MonoBehaviour
     
     public void MinimizeAll()
     {
-        foreach (CustomUIElement panel in _activePanels)
+        foreach (UIAnimation panel in _activePanels)
         {
             panel.Minimize(transitionDuration).OnComplete(() => panel.ResetPosition());
         }
@@ -57,11 +57,11 @@ public class PanelManager : MonoBehaviour
         _activePanels.Clear();
     }
     
-    public void ToPanel(CustomUIElement nextPanel)
+    public void ToPanel(UIAnimation nextPanel)
     {
         for (int i = 0; i < _activePanels.Count; i++)
         {
-            CustomUIElement panel = _activePanels[i];
+            UIAnimation panel = _activePanels[i];
             if (i == _activePanels.Count - 1)
             {
                 panel.MoveX(transitionDuration, moveRight ? 1 : -1, xSpacing);
@@ -92,14 +92,14 @@ public class PanelManager : MonoBehaviour
             return;
         }
         
-        CustomUIElement currentPanel = _activePanels[^1];
+        UIAnimation currentPanel = _activePanels[^1];
         _activePanels.Remove(currentPanel);
         
         currentPanel.Minimize(transitionDuration);
         
         for (int i = 0; i < _activePanels.Count; i++)
         {
-            CustomUIElement panel = _activePanels[i];
+            UIAnimation panel = _activePanels[i];
             if (i == _activePanels.Count - 1)
             {
                 panel.MoveX(transitionDuration, moveRight ? -1 : 1, xSpacing);
