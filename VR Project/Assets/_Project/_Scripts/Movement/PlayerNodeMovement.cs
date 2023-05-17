@@ -26,6 +26,7 @@ public class PlayerNodeMovement : MonoBehaviour
     private bool _startedSearching;
 
     private bool _isGrabbing;
+    private bool _isLeftThumbstick;
     
     private void Awake()
     {
@@ -40,23 +41,23 @@ public class PlayerNodeMovement : MonoBehaviour
     }
 
     private void Update()
-    {
-        bool leftThumbstick = _input.GetInputAxisValue(InputAxis.LeftThumbStickAxis).y >= 0.75;
+    { 
+        _isLeftThumbstick = _input.GetInputAxisValue(InputAxis.LeftThumbStickAxis).y >= 0.75;
 
         _isGrabbing = _input.LeftGripDown || _input.RightGripDown || Input.GetKey(KeyCode.Space);
 
-        if ((leftThumbstick || Input.GetKeyDown(KeyCode.W)) /*&& !_startedSearching*/)
+        if ((_isLeftThumbstick || Input.GetKeyDown(KeyCode.W)) && !_startedSearching)
         {
             _startedSearching = true;
             _currentNode.SetConnectionsActive(true);
         }
         
-        if (Input.GetKey(KeyCode.W))
+        if (_isLeftThumbstick || Input.GetKey(KeyCode.W))
         {
             SearchNode();
         }
 
-        if ((leftThumbstick || Input.GetKeyUp(KeyCode.W)) /*&& _startedSearching*/)
+        if ((!_isLeftThumbstick || Input.GetKeyUp(KeyCode.W)) && _startedSearching)
         {
             _startedSearching = false;
             _currentNode.SetConnectionsActive(false);

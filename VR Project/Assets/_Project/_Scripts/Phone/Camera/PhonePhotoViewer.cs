@@ -17,19 +17,6 @@ public class PhonePhotoViewer : App
     [SerializeField] private GameObject upButton;
     [SerializeField] private GameObject downButton;
     [SerializeField] private GameObject trashButton;
-    
-    private void OnEnable()
-    {
-        if (album.allPhotos.Count <= 0)
-        {
-            image.gameObject.SetActive(false);
-        }
-        else
-        {
-            image.gameObject.SetActive(true);
-            SetTexture(album.allPhotos[_currentIndex]);
-        }
-    }
 
     private void UpdateButtons()
     {
@@ -103,6 +90,16 @@ public class PhonePhotoViewer : App
         gameObject.SetActive(true);
         
         UpdateButtons();
+        
+        if (album.allPhotos.Count <= 0)
+        {
+            image.gameObject.SetActive(false);
+        }
+        else
+        {
+            image.gameObject.SetActive(true);
+            SetTexture(album.allPhotos[_currentIndex]);
+        }
         
         if (transitionDuration != 0)
         {

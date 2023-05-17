@@ -15,7 +15,7 @@ public class PhoneLockScreenHelper : MonoBehaviour, IPointerDownHandler
     {
         if (!phone) phone = GetComponentInParent<Phone>(true);
     }
-
+    
     public void OnPointerDown(PointerEventData eventData)
     {
         phone.TurnOn();

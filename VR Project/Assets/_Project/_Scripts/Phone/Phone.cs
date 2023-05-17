@@ -5,6 +5,7 @@ using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
+[SelectionBase]
 public class Phone : MonoBehaviour
 {
     public static event Action OnPhoneTaken;
@@ -47,8 +48,7 @@ public class Phone : MonoBehaviour
 
         _idleTime += Time.deltaTime;
     }
-
-    [Button]
+    
     public void TakePhone()
     {
         IsPhoneInHolder = false;
@@ -56,8 +56,7 @@ public class Phone : MonoBehaviour
         
         OnPhoneAction();
     }
-
-    [Button]
+    
     public void ReturnPhone()
     {
         IsPhoneInHolder = true;
@@ -108,8 +107,7 @@ public class Phone : MonoBehaviour
         
         OnPhoneAction();
     }
-
-    [Button]
+    
     public void ExitApp()
     {
         if (activePages.Count > 1)
@@ -122,6 +120,12 @@ public class Phone : MonoBehaviour
         }
         
         OnPhoneAction();
+    }
+
+    public void ExitAppWithButton()
+    {
+        if (IsPhoneInHolder)
+            ExitApp();
     }
 
     public void OnPhoneAction()

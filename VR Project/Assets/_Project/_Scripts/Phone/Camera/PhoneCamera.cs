@@ -19,7 +19,7 @@ public class PhoneCamera : App
     
     private CameraMode _mode;
 
-    private bool IsCameraOn() => !blocker.activeInHierarchy;
+    private bool IsCameraOn() => !Phone.IsPhoneInHolder && gameObject.activeInHierarchy;
 
     private enum CameraMode
     {
