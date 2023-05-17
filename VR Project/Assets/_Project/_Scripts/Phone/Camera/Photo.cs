@@ -7,7 +7,7 @@ public class Photo
     public string name;
     public Texture2D texture;
         
-    private string path;
+    public string path;
 
     public Photo(string path, int width, int height)
     {

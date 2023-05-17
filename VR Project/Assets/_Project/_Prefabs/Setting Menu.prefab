@@ -406,7 +406,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadSceneMode: 0
-  UseScreenFader: 1
+  UseSceenFader: 1
   ScreenFadeTime: 0.5
 --- !u!114 &5608841285094983718
 MonoBehaviour:
@@ -436,7 +436,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 7991
 --- !u!1 &3708782038854909192
 GameObject:
   m_ObjectHideFlags: 0

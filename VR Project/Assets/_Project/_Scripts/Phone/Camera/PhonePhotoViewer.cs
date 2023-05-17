@@ -18,7 +18,7 @@ public class PhonePhotoViewer : App
     [SerializeField] private GameObject downButton;
     [SerializeField] private GameObject trashButton;
     
-    private void Start()
+    private void OnEnable()
     {
         if (album.allPhotos.Count <= 0)
         {
@@ -46,6 +46,7 @@ public class PhonePhotoViewer : App
         SetTexture(album.allPhotos[_currentIndex]);
 
         UpdateButtons();
+        OnPhoneAction();
     }
     
     public void Down()
@@ -56,6 +57,7 @@ public class PhonePhotoViewer : App
         SetTexture(album.allPhotos[_currentIndex]);
         
         UpdateButtons();
+        OnPhoneAction();
     }
 
     public void Delete()
@@ -75,13 +77,20 @@ public class PhonePhotoViewer : App
             {
                 image.gameObject.SetActive(false);
             }
+            
+            //Set to 0 because the deleted image is at 0 position
+            _currentIndex = 0;
         }
         else
         {
+            //Move up to a previous image when delete
             Up();
         }
         
         album.DeletePhoto(currentPhoto);
+        
+        UpdateButtons();
+        OnPhoneAction();
     }
 
     private void SetTexture(Photo photo)
@@ -97,8 +106,10 @@ public class PhonePhotoViewer : App
         
         if (transitionDuration != 0)
         {
-            anim.MoveFromOrigin(new Vector3(0, -1, 0));
-            anim.MoveY(transitionDuration, 1).OnComplete(() => canvasGrp.interactable = true);
+            //Set initial position
+            anim.MoveFromOrigin(new Vector3(0, 1, 0));
+            //Slide Down
+            anim.MoveY(transitionDuration, -1).OnComplete(() => canvasGrp.interactable = true);
         }
         else
         {
@@ -111,8 +122,8 @@ public class PhonePhotoViewer : App
         canvasGrp.interactable = false;
         if (transitionDuration > 0)
         {
-            anim.MoveY(transitionDuration, -1).OnComplete(() => gameObject.SetActive(false));
-            
+            //Slide Up
+            anim.MoveY(transitionDuration, 1).OnComplete(() => gameObject.SetActive(false));
         }
         else
         {

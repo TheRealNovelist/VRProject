@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -9,13 +10,18 @@ public class Phone : MonoBehaviour
     public static event Action OnPhoneTaken;
     public static event Action OnPhoneReturn;
     public static bool IsPhoneInHolder { get; private set; } = true;
+    public static bool IsPhoneOn { get; private set; }
     
     [SerializeField] private App startingApp;
-    [SerializeField] private PhoneLockScreen lockScreen;
+    [SerializeField] private CanvasGroup lockScreen;
     [SerializeField] private float transitionDuration = 1f;
-
-    private Stack<App> activePages = new();
+    [SerializeField] private float fadeDuration = 0.5f;
+    [SerializeField] private float maxIdleTime = 30f;
     
+    private Stack<App> activePages = new();
+
+    private float _idleTime;
+
     private void Awake()
     {
         //Avoid all app are on
@@ -28,11 +34,27 @@ public class Phone : MonoBehaviour
         activePages.Push(startingApp);
     }
 
+    private void Update()
+    {
+        if (!IsPhoneOn) return;
+        
+        if (_idleTime >= maxIdleTime)
+        {
+            _idleTime = maxIdleTime;
+            TurnOff();
+            return;
+        }
+
+        _idleTime += Time.deltaTime;
+    }
+
     [Button]
     public void TakePhone()
     {
         IsPhoneInHolder = false;
         OnPhoneTaken?.Invoke();
+        
+        OnPhoneAction();
     }
 
     [Button]
@@ -40,34 +62,51 @@ public class Phone : MonoBehaviour
     {
         IsPhoneInHolder = true;
         OnPhoneReturn?.Invoke();
+        
+        OnPhoneAction();
     }
 
     public void TurnOn()
     {
+        IsPhoneOn = true;
+        
+        //Reset idle time
+        _idleTime = 0;
+        
         if (activePages.TryPeek(out App topPage))
         {
             topPage.Enter();
         }
+        
+        lockScreen.DOFade(0, fadeDuration).OnComplete(() => lockScreen.gameObject.SetActive(false));
     }
 
     public void TurnOff()
     {
-        if (activePages.TryPeek(out App topPage))
+        IsPhoneOn = false;
+        
+        lockScreen.gameObject.SetActive(true);
+        lockScreen.DOFade(1, fadeDuration).OnComplete(() =>
         {
-            topPage.Exit();
-        }
+            if (activePages.TryPeek(out App topPage))
+            {
+                topPage.Exit();
+            }
+        });
     }
     
-    public void EnterApp(App page)
+    public void EnterApp(App app)
     {
-        page.Enter(transitionDuration);
+        app.Enter(transitionDuration);
 
         if (activePages.TryPeek(out App topPage))
         {
             topPage.Exit(transitionDuration);
         }
         
-        activePages.Push(page);
+        activePages.Push(app);
+        
+        OnPhoneAction();
     }
 
     [Button]
@@ -81,6 +120,13 @@ public class Phone : MonoBehaviour
             App nextTopPage = activePages.Peek();
             nextTopPage.Enter(transitionDuration);
         }
+        
+        OnPhoneAction();
     }
-    
+
+    public void OnPhoneAction()
+    {
+        //Reset idleTime to 0 as action has been called
+        _idleTime = 0;
+    }
 }

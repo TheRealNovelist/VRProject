@@ -73,6 +73,8 @@ public class PhoneCamera : App
                 SwitchMode(CameraMode.Normal);
                 break;
         }
+        
+        OnPhoneAction();
     }
 
     public void TakePicture()
@@ -80,6 +82,7 @@ public class PhoneCamera : App
         if (!IsCameraOn()) return;
         
         album.CreatePhoto();
+        OnPhoneAction();
     }
     
     public void SetBlockerActive(bool isActive)
@@ -109,8 +112,10 @@ public class PhoneCamera : App
         gameObject.SetActive(true);
         if (transitionDuration != 0)
         {
-            anim.MoveFromOrigin(new Vector3(0, -1, 0));
-            anim.MoveY(transitionDuration, 1).OnComplete(() => canvasGrp.interactable = true);
+            //Set initial position
+            anim.MoveFromOrigin(new Vector3(0, 1, 0));
+            //Slide Down
+            anim.MoveY(transitionDuration, -1).OnComplete(() => canvasGrp.interactable = true);
         }
         else
         {
@@ -123,8 +128,8 @@ public class PhoneCamera : App
         canvasGrp.interactable = false;
         if (transitionDuration > 0)
         {
-            anim.MoveY(transitionDuration, -1).OnComplete(() => gameObject.SetActive(false));
-            
+            //Slide Up
+            anim.MoveY(transitionDuration, 1).OnComplete(() => gameObject.SetActive(false));
         }
         else
         {

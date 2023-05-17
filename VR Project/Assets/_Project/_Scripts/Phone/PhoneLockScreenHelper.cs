@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class PhoneLockScreen : MonoBehaviour, IPointerDownHandler
+public class PhoneLockScreenHelper : MonoBehaviour, IPointerDownHandler
 {
     [SerializeField] private Phone phone;
 

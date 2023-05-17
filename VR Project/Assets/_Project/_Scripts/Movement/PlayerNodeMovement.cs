@@ -45,7 +45,7 @@ public class PlayerNodeMovement : MonoBehaviour
 
         _isGrabbing = _input.LeftGripDown || _input.RightGripDown || Input.GetKey(KeyCode.Space);
 
-        if ((Input.GetKeyDown(KeyCode.W)) /*&& !_startedSearching*/)
+        if ((leftThumbstick || Input.GetKeyDown(KeyCode.W)) /*&& !_startedSearching*/)
         {
             _startedSearching = true;
             _currentNode.SetConnectionsActive(true);
@@ -56,7 +56,7 @@ public class PlayerNodeMovement : MonoBehaviour
             SearchNode();
         }
 
-        if ((Input.GetKeyUp(KeyCode.W)) /*&& _startedSearching*/)
+        if ((leftThumbstick || Input.GetKeyUp(KeyCode.W)) /*&& _startedSearching*/)
         {
             _startedSearching = false;
             _currentNode.SetConnectionsActive(false);
