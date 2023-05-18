@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using BNG;
 using DG.Tweening;
 using Sirenix.OdinInspector;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,6 +15,7 @@ public class PlayerNodeMovement : MonoBehaviour
 
     [Header("Setting")]
     [SerializeField] private MovementNode startingNode;
+    [SerializeField] private int playerHeight = 2;
     [SerializeField] private float travelTime = 5f;
     [SerializeField] private LayerMask mask = Physics.DefaultRaycastLayers;
 
@@ -35,9 +37,17 @@ public class PlayerNodeMovement : MonoBehaviour
         
         _fader.FadeInSpeed = travelTime;
         _fader.FadeOutSpeed = travelTime;
+    }
+
+    private void Start()
+    {
+        if (!startingNode)
+        {
+            Debug.Log("[PlayerNodeMovement] Please assign a starting node to the player");
+            Debug.Break();
+        }
         
-        if (startingNode)
-            TeleportToNode(startingNode, true);
+        TeleportToNode(startingNode, true);
     }
 
     private void Update()
@@ -46,18 +56,18 @@ public class PlayerNodeMovement : MonoBehaviour
 
         _isGrabbing = _input.LeftGripDown || _input.RightGripDown || Input.GetKey(KeyCode.Space);
 
-        if ((_isLeftThumbstick || Input.GetKeyDown(KeyCode.W)) && !_startedSearching)
+        if ((/*_isLeftThumbstick ||*/ Input.GetKeyDown(KeyCode.W)) && !_startedSearching)
         {
             _startedSearching = true;
             _currentNode.SetConnectionsActive(true);
         }
         
-        if (_isLeftThumbstick || Input.GetKey(KeyCode.W))
+        if (/*_isLeftThumbstick ||*/ Input.GetKey(KeyCode.W))
         {
             SearchNode();
         }
 
-        if ((!_isLeftThumbstick || Input.GetKeyUp(KeyCode.W)) && _startedSearching)
+        if ((/*!_isLeftThumbstick || */Input.GetKeyUp(KeyCode.W)) && _startedSearching)
         {
             _startedSearching = false;
             _currentNode.SetConnectionsActive(false);
@@ -69,20 +79,20 @@ public class PlayerNodeMovement : MonoBehaviour
             }
         }
     }
-
-    [Button]
+    
     private void TeleportToNode(MovementNode node, bool instant = false)
     {
         if (!node.CanTeleport())
             return;
 
-        if (_currentNode) _currentNode.SetNodeActive(false);
+        if (_currentNode) 
+            _currentNode.TeleportOut();
         
         _currentNode = node;
         
         if (instant)
         {
-            _currentNode.Teleport(transform);
+            _currentNode.TeleportTo(transform, playerHeight);
             return;
         }
         
@@ -95,7 +105,7 @@ public class PlayerNodeMovement : MonoBehaviour
 
         yield return new WaitForSeconds(travelTime / 2);
 
-        _currentNode.Teleport(transform, out bool animate);
+        _currentNode.TeleportTo(transform, out bool animate, playerHeight);
         
         if (animate)
         {

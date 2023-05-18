@@ -49,6 +49,7 @@ public class Phone : MonoBehaviour
         _idleTime += Time.deltaTime;
     }
     
+    [Button]
     public void TakePhone()
     {
         IsPhoneInHolder = false;
@@ -57,6 +58,7 @@ public class Phone : MonoBehaviour
         OnPhoneAction();
     }
     
+    [Button]
     public void ReturnPhone()
     {
         IsPhoneInHolder = true;

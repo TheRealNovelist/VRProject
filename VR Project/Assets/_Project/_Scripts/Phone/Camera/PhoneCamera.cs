@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PhoneCamera : App
 {
@@ -12,6 +13,10 @@ public class PhoneCamera : App
     [SerializeField] private Album album;
     [SerializeField] private GameObject blocker;
     
+    [Header("Fade Settings")]
+    [SerializeField] private Graphic screen;
+    [SerializeField] private float fadeDuration = 0.5f;
+
     [Header("Layers")]
     [SerializeField] private LayerMask normalMask; 
     [SerializeField] private LayerMask xRayMask; 
@@ -26,6 +31,13 @@ public class PhoneCamera : App
         Normal = 0,
         XRay = 1,
         Ghost = 2
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();
+        
+        cameraOnPhone.gameObject.SetActive(gameObject.activeInHierarchy);
     }
     
     private void OnPhoneTaken()
@@ -80,6 +92,16 @@ public class PhoneCamera : App
     public void TakePicture()
     {
         if (!IsCameraOn()) return;
+
+        if (screen)
+        {
+            Sequence sequence = DOTween.Sequence();
+
+            canvasGrp.interactable = false;
+            sequence.Append(screen.DOFade(0, fadeDuration / 2));
+            sequence.Append(screen.DOFade(1, fadeDuration / 2));
+            sequence.OnComplete(() => canvasGrp.interactable = true);
+        }
         
         album.CreatePhoto();
         OnPhoneAction();

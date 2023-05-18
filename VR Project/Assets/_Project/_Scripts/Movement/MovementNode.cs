@@ -8,30 +8,43 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 [SelectionBase]
-[RequireComponent(typeof(CapsuleCollider))]
+[RequireComponent(typeof(Collider))]
 public class MovementNode : MonoBehaviour
 {
-    [SerializeField] private List<MovementNode> connections;
-    [SerializeField] private GameObject highlight;
+    [Header("Connections")]
+    [SerializeField] private bool allowTeleportToAllNode;
+    [SerializeField, HideIf("allowTeleportToAllNode")] private List<MovementNode> connections;
     
     [Header("Setting")]
-    [SerializeField] private bool usePlayerHeight = true;
+    [SerializeField] private GameObject highlight;
     [SerializeField] private bool disallowItemOnHand;
     [SerializeField] private bool moveOnTeleport = true;
+    [SerializeField] private bool rotateOnTeleport = true;
     [SerializeField] private bool fadeOutOnTeleport = true;
     
     [Header("Teleport Event")]
     [SerializeField] private bool useTeleportEvent;
     [SerializeField, ShowIf("useTeleportEvent")] private UnityEvent OnTeleportTo;
+    [SerializeField, ShowIf("useTeleportEvent")] private UnityEvent OnTeleportOut;
     
     private List<Renderer> highlightRenderers;
     private bool _allowTeleport = true;
 
+    private List<MovementNode> _fromNodes = new();
+
     private void Awake()
     {
-        OnDeselected();
-        SetNodeActive(false);
-
+        //If there is no specified connection, use all connected
+        if (allowTeleportToAllNode)
+        {
+            FindAllConnection();
+        }
+        
+        foreach (MovementNode node in connections)
+        {
+            node.AddToFromNode(this);
+        }
+        
         highlightRenderers = highlight.GetComponentsInChildren<Renderer>().ToList();
         
         foreach (var highlightRenderer in highlightRenderers)
@@ -40,11 +53,36 @@ public class MovementNode : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void FindAllConnection()
     {
-        
+        connections = new List<MovementNode>(FindObjectsOfType<MovementNode>(true).Where(node => node != this));
     }
 
+    private void Start()
+    {
+        OnDeselected();
+        SetNodeActive(false);
+    }
+
+    [Button]
+    public void Connect(MovementNode node)
+    {
+        if (connections.Contains(node) || node == this)
+            return;
+
+        connections.Add(node);
+        node.AddToFromNode(this);
+    }
+    
+    //Callback to all nodes that this node can be teleported to
+    private void AddToFromNode(MovementNode node)
+    {
+        if (_fromNodes.Contains(node))
+            return;
+        
+        _fromNodes.Add(node);
+    }
+    
     public void OnSelected(bool itemOnHand)
     {
         if (highlight) highlight.SetActive(true);
@@ -66,23 +104,38 @@ public class MovementNode : MonoBehaviour
         if (highlight) highlight.SetActive(false);
     }
 
-    public void Teleport(Transform player)
+    public void TeleportOut()
     {
-        player.position = GetPosition(player);
+        if (useTeleportEvent) OnTeleportOut.Invoke();
+        
+        SetNodeActive(false);
     }
-    
-    public void Teleport(Transform player, out bool animate)
+
+    public void TeleportTo(Transform player, int playerHeight = 2)
     {
         if (useTeleportEvent) OnTeleportTo.Invoke();
-        if (moveOnTeleport) player.position = GetPosition(player);
+        
+        if (!moveOnTeleport) return;
+        
+        player.position = GetPosition(playerHeight);
+        if (rotateOnTeleport)
+        {
+            player.rotation = Quaternion.LookRotation(transform.forward);
+        }
+    }
+    
+    public void TeleportTo(Transform player, out bool animate, int playerHeight = 0)
+    {
+        TeleportTo(player, playerHeight);
+        
         animate = fadeOutOnTeleport;
     }
 
-    public Vector3 GetPosition(Transform moveTarget)
+    private Vector3 GetPosition(int height = 2)
     {
         return new Vector3(
             transform.position.x, 
-            usePlayerHeight ? moveTarget.position.y : transform.position.y, 
+            transform.position.y + height, 
             transform.position.z);
     }
 
@@ -124,10 +177,5 @@ public class MovementNode : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         DrawConnection();
-    }
-
-    public void ReloadScene()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
