@@ -63,8 +63,7 @@ public class MovementNode : MonoBehaviour
         OnDeselected();
         SetNodeActive(false);
     }
-
-    [Button]
+    
     public void Connect(MovementNode node)
     {
         if (connections.Contains(node) || node == this)
