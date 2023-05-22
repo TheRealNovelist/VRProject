@@ -2,14 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using BNG;
-using DG.Tweening;
-using Sirenix.OdinInspector;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerNodeMovement : MonoBehaviour
 {
+    [SerializeField] private bool isEditorMode = false;
+    
     [Header("Components")] 
     [SerializeField] private Transform pointer;
 
@@ -51,23 +50,24 @@ public class PlayerNodeMovement : MonoBehaviour
     }
 
     private void Update()
-    { 
+    {
         _isLeftThumbstick = _input.GetInputAxisValue(InputAxis.LeftThumbStickAxis).y >= 0.75;
 
         _isGrabbing = _input.LeftGripDown || _input.RightGripDown || Input.GetKey(KeyCode.Space);
+        
 
-        if ((/*_isLeftThumbstick ||*/ Input.GetKeyDown(KeyCode.W)) && !_startedSearching)
+        if ((isEditorMode ? Input.GetKeyDown(KeyCode.W) : _isLeftThumbstick) && !_startedSearching)
         {
             _startedSearching = true;
             _currentNode.SetConnectionsActive(true);
         }
         
-        if (/*_isLeftThumbstick ||*/ Input.GetKey(KeyCode.W))
+        if (isEditorMode ? Input.GetKey(KeyCode.W) : _isLeftThumbstick)
         {
             SearchNode();
         }
 
-        if ((/*!_isLeftThumbstick || */Input.GetKeyUp(KeyCode.W)) && _startedSearching)
+        if ((isEditorMode ? Input.GetKeyUp(KeyCode.W) : !_isLeftThumbstick) && _startedSearching)
         {
             _startedSearching = false;
             _currentNode.SetConnectionsActive(false);

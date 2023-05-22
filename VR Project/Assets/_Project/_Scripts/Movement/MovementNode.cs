@@ -172,7 +172,13 @@ public class MovementNode : MonoBehaviour
             Gizmos.DrawLine(origin, connectionPoint);
         }
     }
-    
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(new Vector3(transform.position.x, 1, transform.position.z), new Vector3(2, 2, 2));
+    }
+
     private void OnDrawGizmosSelected()
     {
         DrawConnection();
