@@ -176,7 +176,7 @@ public class MovementNode : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(new Vector3(transform.position.x, 1, transform.position.z), new Vector3(2, 2, 2));
+        Gizmos.DrawWireCube(new Vector3(transform.position.x, 1, transform.position.z), new Vector3(2f, 2, 2f));
     }
 
     private void OnDrawGizmosSelected()

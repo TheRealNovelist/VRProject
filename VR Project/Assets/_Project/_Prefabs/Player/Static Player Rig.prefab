@@ -1275,7 +1275,7 @@ MonoBehaviour:
   LastTeleportTime: 0
   CharacterControllerYOffset: -1
   CameraHeight: 0
-  ElevateCameraIfNoHMDPresent: 1
+  ElevateCameraIfNoHMDPresent: 0
   ElevateCameraHeight: 1
   MinElevation: -100
   MaxElevation: 5000
@@ -1293,9 +1293,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9be407efd8af5154cb9bbc51c31e25bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEditorMode: 0
   pointer: {fileID: 7393283966812101729}
   startingNode: {fileID: 0}
-  playerHeight: 2
+  playerHeight: 1
   travelTime: 2
   mask:
     serializedVersion: 2
