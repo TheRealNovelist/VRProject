@@ -12,25 +12,27 @@ public class PhoneCamera : App
     [SerializeField] private Camera cameraOnPhone;
     [SerializeField] private Album album;
     [SerializeField] private GameObject blocker;
+
+    [Header("Warning")] 
+    [SerializeField] private UIAnimation warning;
+    [SerializeField] private float warningTime;
     
     [Header("Fade Settings")]
     [SerializeField] private Graphic screen;
     [SerializeField] private float fadeDuration = 0.5f;
 
-    [Header("Layers")]
-    [SerializeField] private LayerMask normalMask; 
-    [SerializeField] private LayerMask xRayMask; 
-    [SerializeField] private LayerMask ghostMask;
+    [Header("Camera Settings")] 
+    [SerializeField] private CameraSwitcher switcher;
     
+
     private CameraMode _mode;
 
     private bool IsCameraOn() => !Phone.IsPhoneInHolder && gameObject.activeInHierarchy;
 
     private enum CameraMode
     {
-        Normal = 0,
-        XRay = 1,
-        Ghost = 2
+        Present = 0,
+        Future = 1
     }
 
     protected override void Awake()
@@ -38,8 +40,14 @@ public class PhoneCamera : App
         base.Awake();
         
         cameraOnPhone.gameObject.SetActive(gameObject.activeInHierarchy);
+        SwitchMode(CameraMode.Present);
     }
-    
+
+    private void Start()
+    {
+        warning.MoveFromOrigin(new Vector3(0, 1, 0));
+    }
+
     private void OnPhoneTaken()
     {
         SetBlockerActive(false);
@@ -50,39 +58,34 @@ public class PhoneCamera : App
         SetBlockerActive(true);
     }
 
+    [Button]
     void SwitchMode(CameraMode mode)
     {
         switch (mode)
         {
-            case CameraMode.Normal:
-                cameraOnPhone.cullingMask = normalMask;
-                _mode = CameraMode.Normal;
+            case CameraMode.Present:
+                switcher.SwitchCamera(false);
+                _mode = CameraMode.Present;
                 break;
-            case CameraMode.XRay:
-                cameraOnPhone.cullingMask = xRayMask;
-                _mode = CameraMode.XRay;
-                break;
-            case CameraMode.Ghost:
-                cameraOnPhone.cullingMask = ghostMask;
-                _mode = CameraMode.Ghost;
+            case CameraMode.Future:
+                switcher.SwitchCamera(true);
+                _mode = CameraMode.Future;
                 break;
         }
     }
 
+    
     public void CycleMode()
     {
         if (!IsCameraOn()) return;
         
         switch (_mode)
         {
-            case CameraMode.Normal:
-                SwitchMode(CameraMode.XRay);
+            case CameraMode.Present:
+                SwitchMode(CameraMode.Future);
                 break;
-            case CameraMode.XRay:
-                SwitchMode(CameraMode.Ghost);
-                break;
-            case CameraMode.Ghost:
-                SwitchMode(CameraMode.Normal);
+            case CameraMode.Future:
+                SwitchMode(CameraMode.Present);
                 break;
         }
         
@@ -93,6 +96,21 @@ public class PhoneCamera : App
     {
         if (!IsCameraOn()) return;
 
+        if (!album.CreatePhoto())
+        {
+            Sequence sequence = DOTween.Sequence();
+
+            warning.MoveFromOrigin(new Vector3(0, 1, 0));
+            
+            canvasGrp.interactable = false;
+            sequence.Append(warning.MoveY(fadeDuration, -1));
+            sequence.AppendInterval(warningTime);
+            sequence.Append(warning.MoveY(fadeDuration, 1));
+            sequence.OnComplete(() => canvasGrp.interactable = true);
+            
+            return;
+        }
+        
         if (screen)
         {
             Sequence sequence = DOTween.Sequence();
@@ -101,9 +119,10 @@ public class PhoneCamera : App
             sequence.Append(screen.DOFade(0, fadeDuration / 2));
             sequence.Append(screen.DOFade(1, fadeDuration / 2));
             sequence.OnComplete(() => canvasGrp.interactable = true);
+            
+            sequence.Play();
         }
         
-        album.CreatePhoto();
         OnPhoneAction();
     }
     

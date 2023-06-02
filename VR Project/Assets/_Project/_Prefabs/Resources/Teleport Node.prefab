@@ -4520,12 +4520,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cc79038f5851bd44abf056c774e47c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  arrow: {fileID: 6510342721119095416}
   allowTeleportToAllNode: 0
   connections: []
   highlight: {fileID: 5321071214214320611}
   disallowItemOnHand: 0
   moveOnTeleport: 1
-  rotateOnTeleport: 1
+  rotateOnTeleport: 0
   fadeOutOnTeleport: 1
   useTeleportEvent: 0
   OnTeleportTo:
@@ -4534,6 +4535,7 @@ MonoBehaviour:
   OnTeleportOut:
     m_PersistentCalls:
       m_Calls: []
+  drawReachableZone: 1
 --- !u!136 &5321071213876262158
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -6771,12 +6773,12 @@ GameObject:
   - component: {fileID: 8328158063524145349}
   - component: {fileID: 5334825612888166842}
   m_Layer: 0
-  m_Name: Prism
+  m_Name: Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &47862455187263692
 Transform:
   m_ObjectHideFlags: 0

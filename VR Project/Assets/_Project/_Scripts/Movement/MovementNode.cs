@@ -11,6 +11,9 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(Collider))]
 public class MovementNode : MonoBehaviour
 {
+    [Header("Components")] 
+    [SerializeField] private GameObject arrow;
+    
     [Header("Connections")]
     [SerializeField] private bool allowTeleportToAllNode;
     [SerializeField, HideIf("allowTeleportToAllNode")] private List<MovementNode> connections;
@@ -26,6 +29,9 @@ public class MovementNode : MonoBehaviour
     [SerializeField] private bool useTeleportEvent;
     [SerializeField, ShowIf("useTeleportEvent")] private UnityEvent OnTeleportTo;
     [SerializeField, ShowIf("useTeleportEvent")] private UnityEvent OnTeleportOut;
+
+    [Header("Debug")] 
+    [SerializeField] private bool drawReachableZone = true;
     
     private List<Renderer> highlightRenderers;
     private bool _allowTeleport = true;
@@ -175,6 +181,8 @@ public class MovementNode : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        if (!drawReachableZone) return;
+        
         Gizmos.color = Color.blue;
         Gizmos.DrawWireCube(new Vector3(transform.position.x, 1, transform.position.z), new Vector3(2f, 2, 2f));
     }
@@ -183,4 +191,12 @@ public class MovementNode : MonoBehaviour
     {
         DrawConnection();
     }
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (arrow)
+            arrow.SetActive(rotateOnTeleport);
+    }
+#endif
 }

@@ -122,17 +122,17 @@ public class RadialLock : Lock
     {
         if (_currentIndex != combination.Count - 1)
         {
-            OnFailed.Invoke();
+            Invoke(false);
             return;
         }
 
         if (combination.Where((t, i) => _inputtedValues[i] != t).Any())
         {
-            OnFailed.Invoke();
+            Invoke(false);
             return;
         }
         
-        OnUnlocked.Invoke();
+        Invoke(true);
     }
 
     public void ResetLock()

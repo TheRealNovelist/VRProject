@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class Album : MonoBehaviour
 {
+    [SerializeField] private int photoLimit;
+    
     [Header("Directory Settings")]
     [SerializeField] private string folderName;
     [SerializeField] private string namePrefix;
@@ -15,6 +17,7 @@ public class Album : MonoBehaviour
         
     [Space]
     [SerializeField] private RenderTexture refTexture;
+    
     
     private string NameFormat => 
         overrideName != "" ? overrideName 
@@ -42,13 +45,29 @@ public class Album : MonoBehaviour
             Debug.Log("No image found in file");
         }
     }
-    
-    public void CreatePhoto() => CreatePhoto(refTexture);
-    public void CreatePhoto(RenderTexture texture)
+
+    public int GetPhotoLimit()
     {
+        return photoLimit;
+    }
+    
+    public bool HasReachedLimit()
+    {
+        return allPhotos.Count >= photoLimit;
+    }
+    
+    public bool CreatePhoto() => CreatePhoto(refTexture);
+    public bool CreatePhoto(RenderTexture texture)
+    {
+        if (HasReachedLimit())
+        {
+            return false;
+        }
+        
         Photo newImage = new (texture, DirectoryPath, NameFormat);
               
         allPhotos.Add(newImage);
+        return true;
     }
 
     public bool LoadAllPhotoFromFolder(out List<Photo> photos)

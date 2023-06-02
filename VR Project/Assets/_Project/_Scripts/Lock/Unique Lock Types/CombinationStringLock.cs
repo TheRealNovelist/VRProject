@@ -11,7 +11,7 @@ public class CombinationStringLock : Lock
     [SerializeField] private string combination;
     
     [Header("Display Settings")]
-    [SerializeField] private TextMeshProUGUI outputText;
+    [SerializeField] private TMP_Text outputText;
 
     private int _combinationLength;
     private Stack<string> _inputtedValues = new();
@@ -38,11 +38,11 @@ public class CombinationStringLock : Lock
     {
         if (GetAllInputted() == combination)
         {
-            OnUnlocked.Invoke(); 
+            Invoke(true); 
         }
         else
         {
-            OnFailed.Invoke();
+            Invoke(false);
         }
     }
 
@@ -55,6 +55,17 @@ public class CombinationStringLock : Lock
         
         _inputtedValues.Pop();
         outputText.text = GetAllInputted();
+    }
+
+    public void ClearAll()
+    {
+        if (_inputtedValues.Count <= 0)
+        {
+            return;
+        }
+        
+        _inputtedValues.Clear();
+        outputText.text = "";
     }
 
     public string GetAllInputted()

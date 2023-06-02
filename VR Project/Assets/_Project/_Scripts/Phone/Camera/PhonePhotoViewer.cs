@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,17 +13,32 @@ public class PhonePhotoViewer : App
 
     private int _currentIndex = 0;
     private int _photoCount => album.allPhotos.Count;
+
+    [Header("Texts")] 
+    [SerializeField] private GameObject indexObject;
+    [SerializeField] private TextMeshProUGUI indexText;
+    [SerializeField] private TextMeshProUGUI limitText;
     
     [Header("Buttons")] 
     [SerializeField] private GameObject upButton;
     [SerializeField] private GameObject downButton;
     [SerializeField] private GameObject trashButton;
 
+    protected override void Awake()
+    {
+        base.Awake();
+
+        limitText.text = album.GetPhotoLimit().ToString();
+    }
+    
     private void UpdateButtons()
     {
         upButton.SetActive(_currentIndex != 0 && _photoCount > 0);
         downButton.SetActive(_currentIndex != _photoCount - 1 && _photoCount > 0);
         trashButton.SetActive(_photoCount > 0);
+        
+        indexObject.SetActive(_photoCount > 0);
+        indexText.text = (_currentIndex + 1).ToString();
     }
 
     public void Up()

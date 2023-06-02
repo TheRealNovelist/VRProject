@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerNodeMovement : MonoBehaviour
 {
-    [SerializeField] private bool isEditorMode = false;
+    private bool isEditorMode = false;
     
     [Header("Components")] 
     [SerializeField] private Transform pointer;
@@ -51,6 +51,7 @@ public class PlayerNodeMovement : MonoBehaviour
 
     private void Update()
     {
+        isEditorMode = !InputBridge.Instance.HMDActive;
         _isLeftThumbstick = _input.GetInputAxisValue(InputAxis.LeftThumbStickAxis).y >= 0.75;
 
         _isGrabbing = _input.LeftGripDown || _input.RightGripDown || Input.GetKey(KeyCode.Space);
