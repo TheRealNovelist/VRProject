@@ -18,6 +18,12 @@ public class MovementNode : MonoBehaviour
     [SerializeField] private bool allowTeleportToAllNode;
     [SerializeField, HideIf("allowTeleportToAllNode")] private List<MovementNode> connections;
     
+    [Header("Mirror Connection")]
+    [SerializeField] private MovementNode mirrorNode;
+    public Level level;
+    
+    public MovementNode MirrorNode => mirrorNode;
+    
     [Header("Setting")]
     [SerializeField] private GameObject highlight;
     [SerializeField] private bool disallowItemOnHand;
@@ -48,7 +54,7 @@ public class MovementNode : MonoBehaviour
         
         foreach (MovementNode node in connections)
         {
-            node.AddToFromNode(this);
+            node.AddNodeCallback(this);
         }
         
         highlightRenderers = highlight.GetComponentsInChildren<Renderer>().ToList();
@@ -76,11 +82,17 @@ public class MovementNode : MonoBehaviour
             return;
 
         connections.Add(node);
-        node.AddToFromNode(this);
+        node.AddNodeCallback(this);
+    }
+
+    private void ConnectMirror(MovementNode node)
+    {
+        node.mirrorNode = this;
     }
     
+
     //Callback to all nodes that this node can be teleported to
-    private void AddToFromNode(MovementNode node)
+    private void AddNodeCallback(MovementNode node)
     {
         if (_fromNodes.Contains(node))
             return;
@@ -88,6 +100,10 @@ public class MovementNode : MonoBehaviour
         _fromNodes.Add(node);
     }
     
+    public bool CanTeleport() => _allowTeleport;
+
+    #region Selection
+
     public void OnSelected(bool itemOnHand)
     {
         if (highlight) highlight.SetActive(true);
@@ -95,19 +111,21 @@ public class MovementNode : MonoBehaviour
         if (!disallowItemOnHand) return;
 
         _allowTeleport = !itemOnHand;
-        
+
         foreach (var highlightRenderer in highlightRenderers)
         {
             highlightRenderer.material.color = itemOnHand ? Color.red : Color.green;
         }
     }
 
-    public bool CanTeleport() => _allowTeleport;
-
     public void OnDeselected()
     {
         if (highlight) highlight.SetActive(false);
     }
+
+    #endregion
+
+    #region Teleport
 
     public void TeleportOut()
     {
@@ -136,6 +154,8 @@ public class MovementNode : MonoBehaviour
         animate = fadeOutOnTeleport;
     }
 
+    #endregion
+
     private Vector3 GetPosition(int height = 2)
     {
         return new Vector3(
@@ -159,6 +179,8 @@ public class MovementNode : MonoBehaviour
     {
         gameObject.SetActive(isActive);
     }
+    
+    #region Debug
 
     public void DrawConnection()
     {
@@ -192,11 +214,24 @@ public class MovementNode : MonoBehaviour
         DrawConnection();
     }
 
+    #endregion
+
 #if UNITY_EDITOR
     private void OnValidate()
     {
         if (arrow)
             arrow.SetActive(rotateOnTeleport);
+
+        if (mirrorNode)
+        {
+            if (mirrorNode == this)
+            {
+                mirrorNode = null;    
+                return;
+            }
+            
+            ConnectMirror(mirrorNode);
+        }
     }
 #endif
 }

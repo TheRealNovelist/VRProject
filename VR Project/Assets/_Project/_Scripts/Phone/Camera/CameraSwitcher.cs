@@ -5,16 +5,16 @@ using UnityEngine;
 
 public class CameraSwitcher : MonoBehaviour
 {
-    public Vector3 offset;
     [SerializeField] private Camera cameraToSwitch;
     
     private Transform currentAnchor => gameObject.transform;
     private Transform linkedAnchor;
-    
+
+    private Vector3 offset => LevelController.Offset;
     
     private void Awake()
     {
-        linkedAnchor = new GameObject("Future Anchor").transform;
+        linkedAnchor = new GameObject("Alternate Anchor").transform;
     }
 
     private void Update()

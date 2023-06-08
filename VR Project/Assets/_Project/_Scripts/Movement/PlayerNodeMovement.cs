@@ -11,6 +11,7 @@ public class PlayerNodeMovement : MonoBehaviour
     
     [Header("Components")] 
     [SerializeField] private Transform pointer;
+    [SerializeField] private LevelController level;
 
     [Header("Setting")]
     [SerializeField] private MovementNode startingNode;
@@ -53,9 +54,13 @@ public class PlayerNodeMovement : MonoBehaviour
     {
         isEditorMode = !InputBridge.Instance.HMDActive;
         _isLeftThumbstick = _input.GetInputAxisValue(InputAxis.LeftThumbStickAxis).y >= 0.75;
-
-        _isGrabbing = _input.LeftGripDown || _input.RightGripDown || Input.GetKey(KeyCode.Space);
         
+        _isGrabbing = _input.LeftGripDown || _input.RightGripDown || Input.GetKey(KeyCode.Space);
+
+        if (isEditorMode ? Input.GetKeyDown(KeyCode.E) : _input.XButtonDown)
+        {
+            Switch();    
+        }
 
         if ((isEditorMode ? Input.GetKeyDown(KeyCode.W) : _isLeftThumbstick) && !_startedSearching)
         {
@@ -93,11 +98,26 @@ public class PlayerNodeMovement : MonoBehaviour
         
         if (instant)
         {
+            if (LevelController.CurrentLevel != _currentNode.level)
+                LevelController.SwitchLevel(_currentNode.level);
+            
             _currentNode.TeleportTo(transform, playerHeight);
             return;
         }
         
         StartCoroutine(InstantTeleport());
+    }
+
+    private void Switch()
+    {
+        MovementNode mirrorNode = _currentNode.MirrorNode;
+        if (_isGrabbing)
+            return;
+        
+        if (!mirrorNode)
+            return;
+        
+        TeleportToNode(mirrorNode);
     }
 
     private IEnumerator InstantTeleport()
@@ -107,6 +127,9 @@ public class PlayerNodeMovement : MonoBehaviour
         yield return new WaitForSeconds(travelTime / 2);
 
         _currentNode.TeleportTo(transform, out bool animate, playerHeight);
+        
+        if (LevelController.CurrentLevel != _currentNode.level)
+            LevelController.SwitchLevel(_currentNode.level);
         
         if (animate)
         {

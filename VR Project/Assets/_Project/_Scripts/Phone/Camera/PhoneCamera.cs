@@ -24,23 +24,16 @@ public class PhoneCamera : App
     [Header("Camera Settings")] 
     [SerializeField] private CameraSwitcher switcher;
     
-
-    private CameraMode _mode;
+    private Level _mode;
 
     private bool IsCameraOn() => !Phone.IsPhoneInHolder && gameObject.activeInHierarchy;
-
-    private enum CameraMode
-    {
-        Present = 0,
-        Future = 1
-    }
 
     protected override void Awake()
     {
         base.Awake();
         
         cameraOnPhone.gameObject.SetActive(gameObject.activeInHierarchy);
-        SwitchMode(CameraMode.Present);
+        SwitchMode(Level.Present);
     }
 
     private void Start()
@@ -59,17 +52,17 @@ public class PhoneCamera : App
     }
 
     [Button]
-    void SwitchMode(CameraMode mode)
+    void SwitchMode(Level mode)
     {
         switch (mode)
         {
-            case CameraMode.Present:
+            case Level.Present:
                 switcher.SwitchCamera(false);
-                _mode = CameraMode.Present;
+                _mode = Level.Present;
                 break;
-            case CameraMode.Future:
+            case Level.Future:
                 switcher.SwitchCamera(true);
-                _mode = CameraMode.Future;
+                _mode = Level.Future;
                 break;
         }
     }
@@ -81,11 +74,11 @@ public class PhoneCamera : App
         
         switch (_mode)
         {
-            case CameraMode.Present:
-                SwitchMode(CameraMode.Future);
+            case Level.Present:
+                SwitchMode(Level.Future);
                 break;
-            case CameraMode.Future:
-                SwitchMode(CameraMode.Present);
+            case Level.Future:
+                SwitchMode(Level.Present);
                 break;
         }
         
