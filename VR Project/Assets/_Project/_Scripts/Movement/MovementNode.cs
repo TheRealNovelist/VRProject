@@ -29,7 +29,7 @@ public class MovementNode : MonoBehaviour
     [SerializeField] private bool disallowItemOnHand;
     [SerializeField] private bool moveOnTeleport = true;
     [SerializeField] private bool rotateOnTeleport = true;
-    [SerializeField] private bool fadeOutOnTeleport = true;
+    public bool fadeOutOnTeleport = true;
     
     [Header("Teleport Event")]
     [SerializeField] private bool useTeleportEvent;
@@ -134,29 +134,21 @@ public class MovementNode : MonoBehaviour
         SetNodeActive(false);
     }
 
-    public void TeleportTo(Transform player, int playerHeight = 2)
+    public void TeleportTo(Transform player)
     {
         if (useTeleportEvent) OnTeleportTo.Invoke();
         
         if (!moveOnTeleport) return;
         
-        player.position = GetPosition(playerHeight);
+        player.position = GetPosition(player.position.y);
         if (rotateOnTeleport)
         {
             player.rotation = Quaternion.LookRotation(transform.forward);
         }
     }
-    
-    public void TeleportTo(Transform player, out bool animate, int playerHeight = 0)
-    {
-        TeleportTo(player, playerHeight);
-        
-        animate = fadeOutOnTeleport;
-    }
-
     #endregion
 
-    private Vector3 GetPosition(int height = 2)
+    private Vector3 GetPosition(float height)
     {
         return new Vector3(
             transform.position.x, 
@@ -206,7 +198,7 @@ public class MovementNode : MonoBehaviour
         if (!drawReachableZone) return;
         
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(new Vector3(transform.position.x, 1, transform.position.z), new Vector3(2f, 2, 2f));
+        Gizmos.DrawWireCube(new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), new Vector3(2f, 2, 2f));
     }
 
     private void OnDrawGizmosSelected()

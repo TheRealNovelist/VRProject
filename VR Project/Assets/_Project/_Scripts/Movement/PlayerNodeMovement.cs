@@ -2,24 +2,23 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using BNG;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerNodeMovement : MonoBehaviour
 {
-    private bool isEditorMode = false;
+    [ReadOnly] public bool isEditorMode = false;
     
     [Header("Components")] 
-    [SerializeField] private Transform pointer;
-    [SerializeField] private LevelController level;
+    [SerializeField] private LineRenderer pointer;
 
     [Header("Setting")]
     [SerializeField] private MovementNode startingNode;
-    [SerializeField] private int playerHeight = 2;
     [SerializeField] private float travelTime = 5f;
     [SerializeField] private LayerMask mask = Physics.DefaultRaycastLayers;
 
-    private MovementNode _currentNode;
+    [ReadOnly] public MovementNode currentNode;
     private MovementNode _nextNodeSelected;
 
     private ScreenFader _fader;
@@ -29,6 +28,9 @@ public class PlayerNodeMovement : MonoBehaviour
 
     private bool _isGrabbing;
     private bool _isLeftThumbstick;
+
+    public static event Action OnBeforeTeleport;
+    public static event Action OnAfterTeleport;
     
     private void Awake()
     {
@@ -37,6 +39,8 @@ public class PlayerNodeMovement : MonoBehaviour
         
         _fader.FadeInSpeed = travelTime;
         _fader.FadeOutSpeed = travelTime;
+        
+        pointer.gameObject.SetActive(false);
     }
 
     private void Start()
@@ -56,16 +60,11 @@ public class PlayerNodeMovement : MonoBehaviour
         _isLeftThumbstick = _input.GetInputAxisValue(InputAxis.LeftThumbStickAxis).y >= 0.75;
         
         _isGrabbing = _input.LeftGripDown || _input.RightGripDown || Input.GetKey(KeyCode.Space);
-
-        if (isEditorMode ? Input.GetKeyDown(KeyCode.E) : _input.XButtonDown)
-        {
-            Switch();    
-        }
-
+        
         if ((isEditorMode ? Input.GetKeyDown(KeyCode.W) : _isLeftThumbstick) && !_startedSearching)
         {
             _startedSearching = true;
-            _currentNode.SetConnectionsActive(true);
+            currentNode.SetConnectionsActive(true);
         }
         
         if (isEditorMode ? Input.GetKey(KeyCode.W) : _isLeftThumbstick)
@@ -76,8 +75,9 @@ public class PlayerNodeMovement : MonoBehaviour
         if ((isEditorMode ? Input.GetKeyUp(KeyCode.W) : !_isLeftThumbstick) && _startedSearching)
         {
             _startedSearching = false;
-            _currentNode.SetConnectionsActive(false);
-
+            currentNode.SetConnectionsActive(false);
+            pointer.gameObject.SetActive(false);
+            
             if (_nextNodeSelected != null)
             {
                 _nextNodeSelected.OnDeselected();
@@ -86,65 +86,66 @@ public class PlayerNodeMovement : MonoBehaviour
         }
     }
     
-    private void TeleportToNode(MovementNode node, bool instant = false)
+    public void TeleportToNode(MovementNode node, bool instant = false)
     {
         if (!node.CanTeleport())
             return;
 
-        if (_currentNode) 
-            _currentNode.TeleportOut();
+        if (currentNode) 
+            currentNode.TeleportOut();
         
-        _currentNode = node;
+        currentNode = node;
         
+        OnBeforeTeleport?.Invoke();
+
         if (instant)
         {
-            if (LevelController.CurrentLevel != _currentNode.level)
-                LevelController.SwitchLevel(_currentNode.level);
-            
-            _currentNode.TeleportTo(transform, playerHeight);
+            TeleportInstant();
             return;
         }
         
-        StartCoroutine(InstantTeleport());
+        StartCoroutine(TeleportRoutine());
     }
 
-    private void Switch()
-    {
-        MovementNode mirrorNode = _currentNode.MirrorNode;
-        if (_isGrabbing)
-            return;
-        
-        if (!mirrorNode)
-            return;
-        
-        TeleportToNode(mirrorNode);
-    }
-
-    private IEnumerator InstantTeleport()
+    private IEnumerator TeleportRoutine()
     {
         _fader.DoFadeIn();
 
         yield return new WaitForSeconds(travelTime / 2);
 
-        _currentNode.TeleportTo(transform, out bool animate, playerHeight);
+        TeleportInstant();
         
-        if (LevelController.CurrentLevel != _currentNode.level)
-            LevelController.SwitchLevel(_currentNode.level);
-        
-        if (animate)
+        if (currentNode.fadeOutOnTeleport)
         {
             _fader.DoFadeOut();
         }
     }
 
+    private void TeleportInstant()
+    {
+        currentNode.TeleportTo(transform);
+        OnAfterTeleport?.Invoke();
+    }
+
     private void SearchNode()
     {
-        if (Physics.Raycast(pointer.transform.position,pointer.forward, out RaycastHit hit,
+        pointer.SetPosition(0, pointer.transform.position);
+
+        if (Physics.Raycast(pointer.transform.position,pointer.transform.forward, out RaycastHit hit,
                 Mathf.Infinity,mask, QueryTriggerInteraction.Ignore))
         {
             GameObject obj = hit.collider.gameObject;
-            Debug.DrawLine(pointer.transform.position, hit.point, Color.green);
-            
+
+            if (obj.CompareTag("MovementNode"))
+            {
+                pointer.gameObject.SetActive(true);
+                pointer.SetPosition(1, hit.point);
+            }
+            else
+            {
+                pointer.gameObject.SetActive(false);
+            }
+
             if (obj.TryGetComponent(out MovementNode node))
             {
                 if (node != _nextNodeSelected && _nextNodeSelected != null)
@@ -158,8 +159,6 @@ public class PlayerNodeMovement : MonoBehaviour
                 return;
             }
         }
-        
-        Debug.DrawRay(pointer.transform.position, pointer.forward, Color.red);
 
         if (_nextNodeSelected != null)
         {

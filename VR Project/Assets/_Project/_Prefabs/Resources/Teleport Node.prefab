@@ -4524,6 +4524,7 @@ MonoBehaviour:
   allowTeleportToAllNode: 0
   connections: []
   mirrorNode: {fileID: 0}
+  level: 1
   highlight: {fileID: 5321071214214320611}
   disallowItemOnHand: 0
   moveOnTeleport: 1
