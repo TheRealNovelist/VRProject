@@ -140,7 +140,7 @@ public class MovementNode : MonoBehaviour
         
         if (!moveOnTeleport) return;
         
-        player.position = GetPosition(player.position.y);
+        player.position = GetPosition();
         if (rotateOnTeleport)
         {
             player.rotation = Quaternion.LookRotation(transform.forward);
@@ -148,12 +148,9 @@ public class MovementNode : MonoBehaviour
     }
     #endregion
 
-    private Vector3 GetPosition(float height)
+    private Vector3 GetPosition()
     {
-        return new Vector3(
-            transform.position.x, 
-            transform.position.y + height, 
-            transform.position.z);
+        return transform.position;
     }
 
     public void SetConnectionsActive(bool isActive)

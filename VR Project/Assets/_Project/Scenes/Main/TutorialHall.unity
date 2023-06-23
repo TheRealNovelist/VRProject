@@ -44946,16 +44946,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3263147650527039907, guid: 64c9d6d1e1cb4eb42afacb9d6b098ffb,
-        type: 3}
-      propertyPath: ElevateCameraHeight
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3263147650527039907, guid: 64c9d6d1e1cb4eb42afacb9d6b098ffb,
-        type: 3}
-      propertyPath: ElevateCameraIfNoHMDPresent
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4939271646001527318, guid: 64c9d6d1e1cb4eb42afacb9d6b098ffb,
         type: 3}
       propertyPath: startingNode
@@ -44965,11 +44955,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8988025780547267890, guid: 64c9d6d1e1cb4eb42afacb9d6b098ffb,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8988025780587724664, guid: 64c9d6d1e1cb4eb42afacb9d6b098ffb,
         type: 3}

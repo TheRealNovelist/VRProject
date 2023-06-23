@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
 
-public class Conditional : MonoBehaviour
+public class Conditional : SerializedMonoBehaviour
 {
     public bool isTrue;
     
