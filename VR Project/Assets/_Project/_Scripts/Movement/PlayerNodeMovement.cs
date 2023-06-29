@@ -16,7 +16,7 @@ public class PlayerNodeMovement : MonoBehaviour
     [Header("Setting")]
     [SerializeField] private MovementNode startingNode;
     [SerializeField] private float travelTime = 5f;
-    [SerializeField] private LayerMask mask = Physics.DefaultRaycastLayers;
+    [SerializeField] private LayerMask mask;
 
     [ReadOnly] public MovementNode currentNode;
     private MovementNode _nextNodeSelected;
@@ -30,6 +30,7 @@ public class PlayerNodeMovement : MonoBehaviour
     private bool _isLeftThumbstick;
 
     public static event Action OnBeforeTeleport;
+    public static event Action OnTeleport;
     public static event Action OnAfterTeleport;
     
     private void Awake()
@@ -118,13 +119,16 @@ public class PlayerNodeMovement : MonoBehaviour
         if (currentNode.fadeOutOnTeleport)
         {
             _fader.DoFadeOut();
+            yield return new WaitForSeconds(travelTime / 2);
         }
+        
+        OnAfterTeleport?.Invoke();
     }
 
     private void TeleportInstant()
     {
         currentNode.TeleportTo(transform);
-        OnAfterTeleport?.Invoke();
+        OnTeleport?.Invoke();
     }
 
     private void SearchNode()
@@ -132,11 +136,11 @@ public class PlayerNodeMovement : MonoBehaviour
         pointer.SetPosition(0, pointer.transform.position);
 
         if (Physics.Raycast(pointer.transform.position,pointer.transform.forward, out RaycastHit hit,
-                Mathf.Infinity,mask, QueryTriggerInteraction.Ignore))
+                Mathf.Infinity, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
         {
             GameObject obj = hit.collider.gameObject;
 
-            if (obj.CompareTag("MovementNode"))
+            if (((1 << obj.layer) & mask) != 0)
             {
                 pointer.gameObject.SetActive(true);
                 pointer.SetPosition(1, hit.point);
@@ -146,7 +150,7 @@ public class PlayerNodeMovement : MonoBehaviour
                 pointer.gameObject.SetActive(false);
             }
 
-            if (obj.TryGetComponent(out MovementNode node))
+            if (obj.TryGetComponent(SearchComponentMode.Any, out MovementNode node))
             {
                 if (node != _nextNodeSelected && _nextNodeSelected != null)
                 {

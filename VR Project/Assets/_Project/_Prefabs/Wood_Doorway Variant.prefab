@@ -1,5 +1,107 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1927388103
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1927388104}
+  - component: {fileID: 1927388106}
+  - component: {fileID: 1927388105}
+  - component: {fileID: 2045465292691916051}
+  m_Layer: 13
+  m_Name: Teleport Node
+  m_TagString: MovementNode
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1927388104
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927388103}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2, y: 4, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1130692185122628316}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1927388106
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927388103}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.720922, y: 0.65, z: 0.34828284}
+  m_Center: {x: 0, y: 0.325, z: 0}
+--- !u!114 &1927388105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927388103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cc79038f5851bd44abf056c774e47c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  arrow: {fileID: 0}
+  isHidden: 1
+  allowTeleportToAllNode: 0
+  connections: []
+  mirrorNode: {fileID: 0}
+  level: 1
+  disallowItemOnHand: 1
+  moveOnTeleport: 0
+  rotateOnTeleport: 0
+  fadeOutOnTeleport: 0
+  drawReachableZone: 0
+  OnTeleportTo:
+    m_PersistentCalls:
+      m_Calls: []
+  OnTeleportOut:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &2045465292691916051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927388103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52f59eee72e36964fb5b9d8d5d1b3434, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outline: {fileID: 6913399178112622872}
+  useOutlineDefaultSetting: 0
+  defaultSetting:
+    outlineMode: 0
+    outlineColor: {r: 1, g: 1, b: 1, a: 1}
+    outlineWidth: 5
+  selectedSetting:
+    outlineMode: 0
+    outlineColor: {r: 0, g: 1, b: 0.21875882, a: 1}
+    outlineWidth: 5
+  rejectedSetting:
+    outlineMode: 0
+    outlineColor: {r: 1, g: 0, b: 0, a: 1}
+    outlineWidth: 5
 --- !u!1 &3403537599177047548
 GameObject:
   m_ObjectHideFlags: 0
@@ -23,7 +125,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3403537599177047548}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: -0.10157711, z: 0, w: 0.9948277}
   m_LocalPosition: {x: 0.547, y: -0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -31,7 +133,7 @@ Transform:
   - {fileID: 1130692187289235194}
   m_Father: {fileID: 1130692185122628316}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -11.66, z: 0}
 --- !u!1001 &1134682187277384166
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -42,6 +144,14 @@ PrefabInstance:
     - target: {fileID: 1000010675345720, guid: 6c80a22f9cf07854fb0e6a23771d2838, type: 3}
       propertyPath: m_Name
       value: Wood_Door_2_L
+      objectReference: {fileID: 0}
+    - target: {fileID: 1000010675345720, guid: 6c80a22f9cf07854fb0e6a23771d2838, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1000014054217722, guid: 6c80a22f9cf07854fb0e6a23771d2838, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4000013572019996, guid: 6c80a22f9cf07854fb0e6a23771d2838, type: 3}
       propertyPath: m_RootOrder
@@ -95,6 +205,30 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1134682187277384166}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1133991149035512030 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1000010675345720, guid: 6c80a22f9cf07854fb0e6a23771d2838,
+    type: 3}
+  m_PrefabInstance: {fileID: 1134682187277384166}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6913399178112622872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1133991149035512030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1001 &1134682187969443916
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -104,7 +238,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1000010327217462, guid: e9b3b96f5adf5b94293160a1e3d420c8, type: 3}
       propertyPath: m_Name
-      value: Wood_Doorway
+      value: Wood_Doorway Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 1000010327217462, guid: e9b3b96f5adf5b94293160a1e3d420c8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4000010793048720, guid: e9b3b96f5adf5b94293160a1e3d420c8, type: 3}
       propertyPath: m_RootOrder
@@ -120,7 +258,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4000010793048720, guid: e9b3b96f5adf5b94293160a1e3d420c8, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4000010793048720, guid: e9b3b96f5adf5b94293160a1e3d420c8, type: 3}
       propertyPath: m_LocalRotation.w

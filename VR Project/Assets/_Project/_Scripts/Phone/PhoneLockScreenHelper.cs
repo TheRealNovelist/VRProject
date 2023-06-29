@@ -17,6 +17,7 @@ public class PhoneLockScreenHelper : MonoBehaviour, IPointerDownHandler
     {
         if (!phone) phone = GetComponentInParent<Phone>(true);
         LevelController.OnLevelChanged += ChangeText;
+        ChangeText(LevelController.CurrentLevel);
     }
 
     private void OnDestroy()

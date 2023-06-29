@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b272c827d1549034eadd61e9bc46e464, type: 3}
+  m_Name: VoiceLine
+  m_EditorClassIdentifier: 
+  mixerGroup: {fileID: 3314797374489725829, guid: 397327ff431252946a53883c92cea126,
+    type: 2}
+  _files:
+  - audioName: Voice1
+    volume: 1
+    pitch: 1
+    clips:
+      list:
+      - item: {fileID: 8300000, guid: c2138b6f0213991408620b9204a54689, type: 3}
+        weight: 0
+  - audioName: Voice2
+    volume: 1
+    pitch: 1
+    clips:
+      list:
+      - item: {fileID: 8300000, guid: 578f3a7e52fe1554eab4052858e222ff, type: 3}
+        weight: 0
+  - audioName: Voice3
+    volume: 1
+    pitch: 1
+    clips:
+      list:
+      - item: {fileID: 8300000, guid: baf69eaa365480142a79602f9e466e81, type: 3}
+        weight: 0
+  - audioName: Voice4
+    volume: 1
+    pitch: 1
+    clips:
+      list:
+      - item: {fileID: 8300000, guid: 1d55d6fa8be95f648824b60afddf50df, type: 3}
+        weight: 0
+  - audioName: Voice5
+    volume: 1
+    pitch: 1
+    clips:
+      list:
+      - item: {fileID: 8300000, guid: 93bedd43399def14b94b41de85066128, type: 3}
+        weight: 0
+  - audioName: Voice6
+    volume: 1
+    pitch: 1
+    clips:
+      list:
+      - item: {fileID: 8300000, guid: aadb818bbe9d62b42a4b4beac6b0ecd6, type: 3}
+        weight: 0
+  - audioName: Voice7
+    volume: 1
+    pitch: 1
+    clips:
+      list:
+      - item: {fileID: 8300000, guid: fe46c1cf99c876c458cfd558b57d6e48, type: 3}
+        weight: 0
+  - audioName: Voice8
+    volume: 1
+    pitch: 1
+    clips:
+      list:
+      - item: {fileID: 8300000, guid: 3ebb64667683a274fae1ff783f142778, type: 3}
+        weight: 0
+  - audioName: Voice9
+    volume: 1
+    pitch: 1
+    clips:
+      list:
+      - item: {fileID: 8300000, guid: 770dabb229095744c84a94c0cd54a439, type: 3}
+        weight: 0

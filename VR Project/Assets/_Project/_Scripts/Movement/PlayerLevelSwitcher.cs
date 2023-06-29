@@ -19,14 +19,14 @@ public class PlayerLevelSwitcher : MonoBehaviour
 
     private void OnEnable()
     {
-        PlayerNodeMovement.OnAfterTeleport += TryChangeLevel;
+        PlayerNodeMovement.OnTeleport += TryChangeLevel;
     }
 
     private void OnDisable()
     {
-        PlayerNodeMovement.OnAfterTeleport -= TryChangeLevel;
+        PlayerNodeMovement.OnTeleport -= TryChangeLevel;
     }
-
+    
     private void Update()
     {
         _isGrabbing = _input.LeftGripDown || _input.RightGripDown || Input.GetKey(KeyCode.Space);
@@ -43,16 +43,19 @@ public class PlayerLevelSwitcher : MonoBehaviour
         
         if (_isGrabbing)
             return;
-        
+
         if (!mirrorNode)
+        {
+            Debug.Log("[PlayerLevelSwitcher] Unable to switch to mirror node");
             return;
-        
+        }
+
         _movement.TeleportToNode(mirrorNode);
     }
 
     private void TryChangeLevel()
     {
         if (LevelController.CurrentLevel != _movement.currentNode.level)
-            LevelController.SwitchLevel(_movement.currentNode.level);
+            LevelController.SwitchLevel(_movement.currentNode.level, nameof(PlayerLevelSwitcher));
     }
 }

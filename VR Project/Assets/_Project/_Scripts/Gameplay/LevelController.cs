@@ -30,6 +30,11 @@ public class LevelController : MonoBehaviour
         OnLevelChanged -= SetOffset;
     }
 
+    private void Awake()
+    {
+        CurrentLevel = Level.None;
+    }
+
     public void SetOffset(Level level)
     {
         Offset = level switch
@@ -40,9 +45,9 @@ public class LevelController : MonoBehaviour
         };
     }
 
-    public static void SwitchLevel(Level level)
+    public static void SwitchLevel(Level level, string source)
     {
-        Debug.Log($"[LevelController] Switching to {level} level");
+        Debug.Log($"[LevelController] Switching to {level} level (Initiated by {source})");
         
         switch (level)
         {

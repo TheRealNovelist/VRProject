@@ -672,8 +672,8 @@ MonoBehaviour:
   fitType: 0
   rows: 3
   columns: 3
-  cellSize: {x: 320, y: 320}
-  spacing: {x: 10, y: 10}
+  cellSize: {x: 306.66666, y: 306.66666}
+  spacing: {x: 30, y: 30}
   fitX: 1
   fitY: 1
 --- !u!1 &6673445111849401162

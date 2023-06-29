@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,6 +27,28 @@ namespace BNG {
 
         // Save us a null check in FixedUpdate
         private bool _validRigidBody = false;
+
+        private void Awake()
+        {
+            PlayerNodeMovement.OnBeforeTeleport += BeforeTeleport;
+            PlayerNodeMovement.OnAfterTeleport += AfterTeleport;
+        }
+
+        private void OnDestroy()
+        {
+            PlayerNodeMovement.OnBeforeTeleport -= BeforeTeleport;
+            PlayerNodeMovement.OnAfterTeleport -= AfterTeleport;
+        }
+
+        void BeforeTeleport()
+        {
+            enabled = false;
+        }
+
+        void AfterTeleport()
+        {
+            enabled = true;
+        }
 
         void Start() {
             characterController = GetComponent<CharacterController>();
@@ -57,20 +80,6 @@ namespace BNG {
                 if (characterController.isGrounded) {
                     _movementY = 0;
                 }
-            }
-        }
-
-        void FixedUpdate() {
-            // Apply Gravity to Rigidbody Controller
-            if (_validRigidBody && GravityEnabled) {
-                //playerRigidbody.AddRelativeForce(Gravity, ForceMode.VelocityChange);
-                //playerRigidbody.AddForce(new Vector3(0, -Gravity.y * playerRigidbody.mass, 0));
-
-                if(smoothLocomotion && smoothLocomotion.ControllerType == PlayerControllerType.Rigidbody && smoothLocomotion.GroundContacts < 1) {
-                    
-                }
-
-                playerRigidbody.AddForce(Gravity * playerRigidbody.mass);
             }
         }
 

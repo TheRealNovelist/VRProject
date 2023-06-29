@@ -135,10 +135,10 @@ public class PhoneCamera : App
 
     private void OnDisable()
     {
+        cameraOnPhone.gameObject.SetActive(false);
+        
         Phone.OnPhoneTaken -= OnPhoneTaken;
         Phone.OnPhoneReturn -= OnPhoneReturn;
-        
-        cameraOnPhone.gameObject.SetActive(false);
     }
     
     public override void Enter(float transitionDuration = 0)

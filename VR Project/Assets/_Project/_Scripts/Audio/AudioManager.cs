@@ -7,9 +7,9 @@ using UnityEngine;
 public class AudioManager : MonoBehaviour
 {
     [SerializeField, TabGroup("Setting"), PropertySpace(SpaceBefore = 0, SpaceAfter = 5), Title("Components")] 
-    private AudioSource source;
+    protected AudioSource source;
     [SerializeField, InlineEditor, TabGroup("Setting"), Title("Audio Table"), HideLabel] 
-    private AudioTable audioTable;
+    protected AudioTable audioTable;
     
     // Start is called before the first frame update
     private void Awake()
@@ -30,7 +30,7 @@ public class AudioManager : MonoBehaviour
     }
     
     [TabGroup("Testing"), Button(ButtonStyle.CompactBox, Expanded = true)]
-    public void Play(string audioName)
+    public virtual void Play(string audioName)
     {
         AudioFile file = audioTable.FindAudioByName(audioName);
         
@@ -50,7 +50,7 @@ public class AudioManager : MonoBehaviour
     }
 
     [TabGroup("Testing"), Button(ButtonStyle.CompactBox, Expanded = true)]
-    public void PlayOneShot(string audioName)
+    public virtual void PlayOneShot(string audioName)
     {
         AudioFile file = audioTable.FindAudioByName(audioName);
         
@@ -67,21 +67,21 @@ public class AudioManager : MonoBehaviour
     }
     
     [TabGroup("Testing"), Button]
-    public void Unpause()
+    public virtual void Unpause()
     {
         if (source.clip && !source.isPlaying)
             source.UnPause();
     }
     
     [TabGroup("Testing"), Button]
-    public void Pause()
+    public virtual void Pause()
     {
         if (source.isPlaying)
             source.Pause();
     }
     
     [TabGroup("Testing"), Button]
-    public void Stop()
+    public virtual void Stop()
     {
         source.Stop();
     }

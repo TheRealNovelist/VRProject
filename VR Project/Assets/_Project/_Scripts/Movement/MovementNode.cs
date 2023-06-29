@@ -13,8 +13,9 @@ public class MovementNode : MonoBehaviour
 {
     [Header("Components")] 
     [SerializeField] private GameObject arrow;
-    
-    [Header("Connections")]
+
+    [Header("Connections")] 
+    public bool isHidden;
     [SerializeField] private bool allowTeleportToAllNode;
     [SerializeField, HideIf("allowTeleportToAllNode")] private List<MovementNode> connections;
     
@@ -24,23 +25,23 @@ public class MovementNode : MonoBehaviour
     
     public MovementNode MirrorNode => mirrorNode;
     
+    private IMovementNodeResponse[] SelectionResponses => GetComponents<IMovementNodeResponse>();
+    private bool HasResponse => SelectionResponses.Length > 0;
+    
     [Header("Setting")]
-    [SerializeField] private GameObject highlight;
     [SerializeField] private bool disallowItemOnHand;
     [SerializeField] private bool moveOnTeleport = true;
     [SerializeField] private bool rotateOnTeleport = true;
     public bool fadeOutOnTeleport = true;
     
-    [Header("Teleport Event")]
-    [SerializeField] private bool useTeleportEvent;
-    [SerializeField, ShowIf("useTeleportEvent")] private UnityEvent OnTeleportTo;
-    [SerializeField, ShowIf("useTeleportEvent")] private UnityEvent OnTeleportOut;
-
     [Header("Debug")] 
     [SerializeField] private bool drawReachableZone = true;
     
-    private List<Renderer> highlightRenderers;
+    [TitleGroup("Teleport Event"), SerializeField] private UnityEvent OnTeleportTo;
+    [TitleGroup("Teleport Event"), SerializeField] private UnityEvent OnTeleportOut;
+    
     private bool _allowTeleport = true;
+    private bool _currentlyActive = false;
 
     private List<MovementNode> _fromNodes = new();
 
@@ -56,24 +57,24 @@ public class MovementNode : MonoBehaviour
         {
             node.AddNodeCallback(this);
         }
-        
-        highlightRenderers = highlight.GetComponentsInChildren<Renderer>().ToList();
-        
-        foreach (var highlightRenderer in highlightRenderers)
-        {
-            highlightRenderer.material.color = Color.green;
-        }
     }
 
     private void FindAllConnection()
     {
-        connections = new List<MovementNode>(FindObjectsOfType<MovementNode>(true).Where(node => node != this));
+        connections = new List<MovementNode>(FindObjectsOfType<MovementNode>(true).Where(node => node != this && node.level == level));
     }
 
     private void Start()
     {
         OnDeselected();
-        SetNodeActive(false);
+        gameObject.SetActive(false);
+        if (HasResponse)
+        {
+            foreach (var response in SelectionResponses)
+            {
+                response.SetActive(false);
+            }
+        }
     }
     
     public void Connect(MovementNode node)
@@ -83,6 +84,15 @@ public class MovementNode : MonoBehaviour
 
         connections.Add(node);
         node.AddNodeCallback(this);
+    }
+
+    public void Disconnect(MovementNode node)
+    {
+        if (!connections.Contains(node) || node == this)
+            return;
+
+        connections.Remove(node);
+        node.RemoveNodeCallback(this);
     }
 
     private void ConnectMirror(MovementNode node)
@@ -99,6 +109,13 @@ public class MovementNode : MonoBehaviour
         
         _fromNodes.Add(node);
     }
+
+    private void RemoveNodeCallback(MovementNode node)
+    {
+        if (!_fromNodes.Contains(node)) return;
+
+        _fromNodes.Remove(node);
+    }
     
     public bool CanTeleport() => _allowTeleport;
 
@@ -106,21 +123,28 @@ public class MovementNode : MonoBehaviour
 
     public void OnSelected(bool itemOnHand)
     {
-        if (highlight) highlight.SetActive(true);
+        if (HasResponse)
+        {
+            foreach (var response in SelectionResponses)
+            {
+                response.Selected(!itemOnHand);
+            }
+        }
 
         if (!disallowItemOnHand) return;
 
         _allowTeleport = !itemOnHand;
-
-        foreach (var highlightRenderer in highlightRenderers)
-        {
-            highlightRenderer.material.color = itemOnHand ? Color.red : Color.green;
-        }
     }
 
     public void OnDeselected()
     {
-        if (highlight) highlight.SetActive(false);
+        if (HasResponse)
+        {
+            foreach (var response in SelectionResponses)
+            {
+                response.Deselected();
+            }
+        }
     }
 
     #endregion
@@ -129,30 +153,25 @@ public class MovementNode : MonoBehaviour
 
     public void TeleportOut()
     {
-        if (useTeleportEvent) OnTeleportOut.Invoke();
+        OnTeleportOut.Invoke();
         
         SetNodeActive(false);
     }
 
     public void TeleportTo(Transform player)
     {
-        if (useTeleportEvent) OnTeleportTo.Invoke();
+        OnTeleportTo.Invoke();
         
         if (!moveOnTeleport) return;
         
-        player.position = GetPosition();
+        player.position = transform.position;
         if (rotateOnTeleport)
         {
             player.rotation = Quaternion.LookRotation(transform.forward);
         }
     }
     #endregion
-
-    private Vector3 GetPosition()
-    {
-        return transform.position;
-    }
-
+    
     public void SetConnectionsActive(bool isActive)
     {
         foreach (var connection in connections)
@@ -166,7 +185,28 @@ public class MovementNode : MonoBehaviour
 
     public void SetNodeActive(bool isActive)
     {
+        _currentlyActive = isActive;
+        
+        if (isHidden) return;
+
+        if (HasResponse)
+        {
+            foreach (var response in SelectionResponses)
+            {
+                response.SetActive(isActive);
+            }
+        }
+        
         gameObject.SetActive(isActive);
+    }
+
+    public void SetHidden(bool isObjectHidden)
+    {
+        isHidden = isObjectHidden;
+        
+        //If the object is currently active, handle activity
+        if(_currentlyActive)
+            gameObject.SetActive(!isObjectHidden);
     }
     
     #region Debug
@@ -178,6 +218,8 @@ public class MovementNode : MonoBehaviour
         
         foreach (MovementNode connection in connections)
         {
+            if (connection == null) return;
+            
             if (connection.enabled == false)
                 continue;
             
